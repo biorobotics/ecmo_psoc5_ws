@@ -1,0 +1,989 @@
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\ccUcg9fw.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"Pressure_Transducer.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.init_pressure_sensors,"ax",%progbits
+  20              		.align	2
+  21              		.global	init_pressure_sensors
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	init_pressure_sensors, %function
+  25              	init_pressure_sensors:
+  26              	.LFB63:
+  27              		.file 1 "Pressure_Transducer.c"
+   1:Pressure_Transducer.c **** /* ========================================
+   2:Pressure_Transducer.c ****  *
+   3:Pressure_Transducer.c ****  * Copyright Carnegie Mellon University
+   4:Pressure_Transducer.c ****  * All Rights Reserved
+   5:Pressure_Transducer.c ****  * UNPUBLISHED, LICENSED SOFTWARE.
+   6:Pressure_Transducer.c ****  *
+   7:Pressure_Transducer.c ****  * Driver for ICU medical Transpac IV disposable pressure transducer system
+   8:Pressure_Transducer.c ****  * Pressure sensor: differential ADC input
+   9:Pressure_Transducer.c ****  *
+  10:Pressure_Transducer.c ****  * ========================================
+  11:Pressure_Transducer.c **** */
+  12:Pressure_Transducer.c **** 
+  13:Pressure_Transducer.c **** #include "Pressure_Transducer.h"
+  14:Pressure_Transducer.c **** 
+  15:Pressure_Transducer.c **** void init_pressure_sensors(){
+  28              		.loc 1 15 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 08B5     		push	{r3, lr}
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 3, -8
+  35              		.cfi_offset 14, -4
+  16:Pressure_Transducer.c ****     ADC_DelSig_Start();
+  36              		.loc 1 16 0
+  37 0002 FFF7FEFF 		bl	ADC_DelSig_Start
+  38              	.LVL0:
+  17:Pressure_Transducer.c ****     ADC_DelSig_StartConvert();
+  39              		.loc 1 17 0
+  40 0006 FFF7FEFF 		bl	ADC_DelSig_StartConvert
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\ccUcg9fw.s 			page 2
+
+
+  41              	.LVL1:
+  18:Pressure_Transducer.c ****     AMux_Start();
+  42              		.loc 1 18 0
+  43 000a FFF7FEFF 		bl	AMux_Start
+  44              	.LVL2:
+  45 000e 08BD     		pop	{r3, pc}
+  46              		.cfi_endproc
+  47              	.LFE63:
+  48              		.size	init_pressure_sensors, .-init_pressure_sensors
+  49              		.section	.text.switch_multiplexer,"ax",%progbits
+  50              		.align	2
+  51              		.global	switch_multiplexer
+  52              		.thumb
+  53              		.thumb_func
+  54              		.type	switch_multiplexer, %function
+  55              	switch_multiplexer:
+  56              	.LFB64:
+  19:Pressure_Transducer.c **** }
+  20:Pressure_Transducer.c **** 
+  21:Pressure_Transducer.c **** void switch_multiplexer(uint16_t channel){
+  57              		.loc 1 21 0
+  58              		.cfi_startproc
+  59              		@ args = 0, pretend = 0, frame = 0
+  60              		@ frame_needed = 0, uses_anonymous_args = 0
+  61              	.LVL3:
+  62 0000 10B5     		push	{r4, lr}
+  63              		.cfi_def_cfa_offset 8
+  64              		.cfi_offset 4, -8
+  65              		.cfi_offset 14, -4
+  66 0002 0446     		mov	r4, r0
+  22:Pressure_Transducer.c ****     // stop conversion before switching Mux
+  23:Pressure_Transducer.c ****     ADC_DelSig_StopConvert();
+  67              		.loc 1 23 0
+  68 0004 FFF7FEFF 		bl	ADC_DelSig_StopConvert
+  69              	.LVL4:
+  24:Pressure_Transducer.c ****     
+  25:Pressure_Transducer.c ****     // only use this for 2 channels
+  26:Pressure_Transducer.c ****     AMux_FastSelect(channel);
+  70              		.loc 1 26 0
+  71 0008 E0B2     		uxtb	r0, r4
+  72 000a FFF7FEFF 		bl	AMux_FastSelect
+  73              	.LVL5:
+  27:Pressure_Transducer.c ****     CyDelay(1u); //Delay to leave enough time for ADC conversion
+  74              		.loc 1 27 0
+  75 000e 0120     		movs	r0, #1
+  76 0010 FFF7FEFF 		bl	CyDelay
+  77              	.LVL6:
+  28:Pressure_Transducer.c ****     ADC_DelSig_StartConvert();
+  78              		.loc 1 28 0
+  79 0014 FFF7FEFF 		bl	ADC_DelSig_StartConvert
+  80              	.LVL7:
+  81 0018 10BD     		pop	{r4, pc}
+  82              		.cfi_endproc
+  83              	.LFE64:
+  84              		.size	switch_multiplexer, .-switch_multiplexer
+  85 001a 00BF     		.section	.text.read_pressure,"ax",%progbits
+  86              		.align	2
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\ccUcg9fw.s 			page 3
+
+
+  87              		.global	read_pressure
+  88              		.thumb
+  89              		.thumb_func
+  90              		.type	read_pressure, %function
+  91              	read_pressure:
+  92              	.LFB65:
+  29:Pressure_Transducer.c **** }
+  30:Pressure_Transducer.c **** 
+  31:Pressure_Transducer.c **** uint16_t read_pressure(uint16_t MuxSelect){
+  93              		.loc 1 31 0
+  94              		.cfi_startproc
+  95              		@ args = 0, pretend = 0, frame = 0
+  96              		@ frame_needed = 0, uses_anonymous_args = 0
+  97              	.LVL8:
+  98 0000 10B5     		push	{r4, lr}
+  99              		.cfi_def_cfa_offset 8
+ 100              		.cfi_offset 4, -8
+ 101              		.cfi_offset 14, -4
+  32:Pressure_Transducer.c ****     uint16_t pressure_reading;
+  33:Pressure_Transducer.c ****     if(MuxSelect==AMux_CHANNEL_0){
+ 102              		.loc 1 33 0
+ 103 0002 30B9     		cbnz	r0, .L6
+  34:Pressure_Transducer.c ****         pressure_reading = ADC_DelSig_Read16();
+ 104              		.loc 1 34 0
+ 105 0004 FFF7FEFF 		bl	ADC_DelSig_Read16
+ 106              	.LVL9:
+ 107 0008 84B2     		uxth	r4, r0
+ 108              	.LVL10:
+  35:Pressure_Transducer.c ****         // switch Mux to channel 1
+  36:Pressure_Transducer.c ****         switch_multiplexer(AMux_CHANNEL_1);
+ 109              		.loc 1 36 0
+ 110 000a 0120     		movs	r0, #1
+ 111 000c FFF7FEFF 		bl	switch_multiplexer
+ 112              	.LVL11:
+ 113 0010 05E0     		b	.L7
+ 114              	.LVL12:
+ 115              	.L6:
+  37:Pressure_Transducer.c ****     }
+  38:Pressure_Transducer.c ****     else{
+  39:Pressure_Transducer.c ****         pressure_reading = ADC_DelSig_Read16();
+ 116              		.loc 1 39 0
+ 117 0012 FFF7FEFF 		bl	ADC_DelSig_Read16
+ 118              	.LVL13:
+ 119 0016 84B2     		uxth	r4, r0
+ 120              	.LVL14:
+  40:Pressure_Transducer.c ****         // switch Mux to channel 0
+  41:Pressure_Transducer.c ****         switch_multiplexer(AMux_CHANNEL_0);
+ 121              		.loc 1 41 0
+ 122 0018 0020     		movs	r0, #0
+ 123 001a FFF7FEFF 		bl	switch_multiplexer
+ 124              	.LVL15:
+ 125              	.L7:
+  42:Pressure_Transducer.c ****     }
+  43:Pressure_Transducer.c ****     return pressure_reading;
+  44:Pressure_Transducer.c **** }
+ 126              		.loc 1 44 0
+ 127 001e 2046     		mov	r0, r4
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\ccUcg9fw.s 			page 4
+
+
+ 128 0020 10BD     		pop	{r4, pc}
+ 129              		.cfi_endproc
+ 130              	.LFE65:
+ 131              		.size	read_pressure, .-read_pressure
+ 132 0022 00BF     		.text
+ 133              	.Letext0:
+ 134              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 135              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 136              		.file 4 "Generated_Source\\PSoC5/ADC_DelSig.h"
+ 137              		.file 5 "Generated_Source\\PSoC5/AMux.h"
+ 138              		.file 6 "Generated_Source\\PSoC5/CyLib.h"
+ 139              		.file 7 "Generated_Source\\PSoC5/core_cm3.h"
+ 140              		.section	.debug_info,"",%progbits
+ 141              	.Ldebug_info0:
+ 142 0000 10020000 		.4byte	0x210
+ 143 0004 0400     		.2byte	0x4
+ 144 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 145 000a 04       		.byte	0x4
+ 146 000b 01       		.uleb128 0x1
+ 147 000c 7C000000 		.4byte	.LASF27
+ 148 0010 0C       		.byte	0xc
+ 149 0011 BE010000 		.4byte	.LASF28
+ 150 0015 55010000 		.4byte	.LASF29
+ 151 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 152 001d 00000000 		.4byte	0
+ 153 0021 00000000 		.4byte	.Ldebug_line0
+ 154 0025 02       		.uleb128 0x2
+ 155 0026 01       		.byte	0x1
+ 156 0027 06       		.byte	0x6
+ 157 0028 92020000 		.4byte	.LASF0
+ 158 002c 02       		.uleb128 0x2
+ 159 002d 01       		.byte	0x1
+ 160 002e 08       		.byte	0x8
+ 161 002f 6E000000 		.4byte	.LASF1
+ 162 0033 02       		.uleb128 0x2
+ 163 0034 02       		.byte	0x2
+ 164 0035 05       		.byte	0x5
+ 165 0036 4E020000 		.4byte	.LASF2
+ 166 003a 03       		.uleb128 0x3
+ 167 003b 58020000 		.4byte	.LASF4
+ 168 003f 02       		.byte	0x2
+ 169 0040 2B       		.byte	0x2b
+ 170 0041 45000000 		.4byte	0x45
+ 171 0045 02       		.uleb128 0x2
+ 172 0046 02       		.byte	0x2
+ 173 0047 07       		.byte	0x7
+ 174 0048 27010000 		.4byte	.LASF3
+ 175 004c 03       		.uleb128 0x3
+ 176 004d 25000000 		.4byte	.LASF5
+ 177 0051 02       		.byte	0x2
+ 178 0052 3F       		.byte	0x3f
+ 179 0053 57000000 		.4byte	0x57
+ 180 0057 02       		.uleb128 0x2
+ 181 0058 04       		.byte	0x4
+ 182 0059 05       		.byte	0x5
+ 183 005a 7D020000 		.4byte	.LASF6
+ 184 005e 02       		.uleb128 0x2
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\ccUcg9fw.s 			page 5
+
+
+ 185 005f 04       		.byte	0x4
+ 186 0060 07       		.byte	0x7
+ 187 0061 15010000 		.4byte	.LASF7
+ 188 0065 02       		.uleb128 0x2
+ 189 0066 08       		.byte	0x8
+ 190 0067 05       		.byte	0x5
+ 191 0068 24020000 		.4byte	.LASF8
+ 192 006c 02       		.uleb128 0x2
+ 193 006d 08       		.byte	0x8
+ 194 006e 07       		.byte	0x7
+ 195 006f D4010000 		.4byte	.LASF9
+ 196 0073 04       		.uleb128 0x4
+ 197 0074 04       		.byte	0x4
+ 198 0075 05       		.byte	0x5
+ 199 0076 696E7400 		.ascii	"int\000"
+ 200 007a 02       		.uleb128 0x2
+ 201 007b 04       		.byte	0x4
+ 202 007c 07       		.byte	0x7
+ 203 007d B1010000 		.4byte	.LASF10
+ 204 0081 03       		.uleb128 0x3
+ 205 0082 63020000 		.4byte	.LASF11
+ 206 0086 03       		.byte	0x3
+ 207 0087 24       		.byte	0x24
+ 208 0088 3A000000 		.4byte	0x3a
+ 209 008c 03       		.uleb128 0x3
+ 210 008d 13020000 		.4byte	.LASF12
+ 211 0091 03       		.byte	0x3
+ 212 0092 2C       		.byte	0x2c
+ 213 0093 4C000000 		.4byte	0x4c
+ 214 0097 02       		.uleb128 0x2
+ 215 0098 04       		.byte	0x4
+ 216 0099 04       		.byte	0x4
+ 217 009a 57000000 		.4byte	.LASF13
+ 218 009e 02       		.uleb128 0x2
+ 219 009f 08       		.byte	0x8
+ 220 00a0 04       		.byte	0x4
+ 221 00a1 AA010000 		.4byte	.LASF14
+ 222 00a5 02       		.uleb128 0x2
+ 223 00a6 01       		.byte	0x1
+ 224 00a7 08       		.byte	0x8
+ 225 00a8 32020000 		.4byte	.LASF15
+ 226 00ac 02       		.uleb128 0x2
+ 227 00ad 08       		.byte	0x8
+ 228 00ae 04       		.byte	0x4
+ 229 00af 86020000 		.4byte	.LASF16
+ 230 00b3 02       		.uleb128 0x2
+ 231 00b4 04       		.byte	0x4
+ 232 00b5 07       		.byte	0x7
+ 233 00b6 1B020000 		.4byte	.LASF17
+ 234 00ba 05       		.uleb128 0x5
+ 235 00bb 2F000000 		.4byte	.LASF30
+ 236 00bf 01       		.byte	0x1
+ 237 00c0 0F       		.byte	0xf
+ 238 00c1 00000000 		.4byte	.LFB63
+ 239 00c5 10000000 		.4byte	.LFE63-.LFB63
+ 240 00c9 01       		.uleb128 0x1
+ 241 00ca 9C       		.byte	0x9c
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\ccUcg9fw.s 			page 6
+
+
+ 242 00cb EB000000 		.4byte	0xeb
+ 243 00cf 06       		.uleb128 0x6
+ 244 00d0 06000000 		.4byte	.LVL0
+ 245 00d4 C6010000 		.4byte	0x1c6
+ 246 00d8 06       		.uleb128 0x6
+ 247 00d9 0A000000 		.4byte	.LVL1
+ 248 00dd D1010000 		.4byte	0x1d1
+ 249 00e1 06       		.uleb128 0x6
+ 250 00e2 0E000000 		.4byte	.LVL2
+ 251 00e6 DC010000 		.4byte	0x1dc
+ 252 00ea 00       		.byte	0
+ 253 00eb 07       		.uleb128 0x7
+ 254 00ec 00000000 		.4byte	.LASF31
+ 255 00f0 01       		.byte	0x1
+ 256 00f1 15       		.byte	0x15
+ 257 00f2 00000000 		.4byte	.LFB64
+ 258 00f6 1A000000 		.4byte	.LFE64-.LFB64
+ 259 00fa 01       		.uleb128 0x1
+ 260 00fb 9C       		.byte	0x9c
+ 261 00fc 49010000 		.4byte	0x149
+ 262 0100 08       		.uleb128 0x8
+ 263 0101 13000000 		.4byte	.LASF18
+ 264 0105 01       		.byte	0x1
+ 265 0106 15       		.byte	0x15
+ 266 0107 81000000 		.4byte	0x81
+ 267 010b 00000000 		.4byte	.LLST0
+ 268 010f 06       		.uleb128 0x6
+ 269 0110 08000000 		.4byte	.LVL4
+ 270 0114 E7010000 		.4byte	0x1e7
+ 271 0118 09       		.uleb128 0x9
+ 272 0119 0E000000 		.4byte	.LVL5
+ 273 011d F2010000 		.4byte	0x1f2
+ 274 0121 2C010000 		.4byte	0x12c
+ 275 0125 0A       		.uleb128 0xa
+ 276 0126 01       		.uleb128 0x1
+ 277 0127 50       		.byte	0x50
+ 278 0128 02       		.uleb128 0x2
+ 279 0129 74       		.byte	0x74
+ 280 012a 00       		.sleb128 0
+ 281 012b 00       		.byte	0
+ 282 012c 09       		.uleb128 0x9
+ 283 012d 14000000 		.4byte	.LVL6
+ 284 0131 FD010000 		.4byte	0x1fd
+ 285 0135 3F010000 		.4byte	0x13f
+ 286 0139 0A       		.uleb128 0xa
+ 287 013a 01       		.uleb128 0x1
+ 288 013b 50       		.byte	0x50
+ 289 013c 01       		.uleb128 0x1
+ 290 013d 31       		.byte	0x31
+ 291 013e 00       		.byte	0
+ 292 013f 06       		.uleb128 0x6
+ 293 0140 18000000 		.4byte	.LVL7
+ 294 0144 D1010000 		.4byte	0x1d1
+ 295 0148 00       		.byte	0
+ 296 0149 0B       		.uleb128 0xb
+ 297 014a 3A010000 		.4byte	.LASF32
+ 298 014e 01       		.byte	0x1
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\ccUcg9fw.s 			page 7
+
+
+ 299 014f 1F       		.byte	0x1f
+ 300 0150 81000000 		.4byte	0x81
+ 301 0154 00000000 		.4byte	.LFB65
+ 302 0158 22000000 		.4byte	.LFE65-.LFB65
+ 303 015c 01       		.uleb128 0x1
+ 304 015d 9C       		.byte	0x9c
+ 305 015e B5010000 		.4byte	0x1b5
+ 306 0162 08       		.uleb128 0x8
+ 307 0163 1B000000 		.4byte	.LASF19
+ 308 0167 01       		.byte	0x1
+ 309 0168 1F       		.byte	0x1f
+ 310 0169 81000000 		.4byte	0x81
+ 311 016d 21000000 		.4byte	.LLST1
+ 312 0171 0C       		.uleb128 0xc
+ 313 0172 5D000000 		.4byte	.LASF33
+ 314 0176 01       		.byte	0x1
+ 315 0177 20       		.byte	0x20
+ 316 0178 81000000 		.4byte	0x81
+ 317 017c 5B000000 		.4byte	.LLST2
+ 318 0180 06       		.uleb128 0x6
+ 319 0181 08000000 		.4byte	.LVL9
+ 320 0185 08020000 		.4byte	0x208
+ 321 0189 09       		.uleb128 0x9
+ 322 018a 10000000 		.4byte	.LVL11
+ 323 018e EB000000 		.4byte	0xeb
+ 324 0192 9C010000 		.4byte	0x19c
+ 325 0196 0A       		.uleb128 0xa
+ 326 0197 01       		.uleb128 0x1
+ 327 0198 50       		.byte	0x50
+ 328 0199 01       		.uleb128 0x1
+ 329 019a 31       		.byte	0x31
+ 330 019b 00       		.byte	0
+ 331 019c 06       		.uleb128 0x6
+ 332 019d 16000000 		.4byte	.LVL13
+ 333 01a1 08020000 		.4byte	0x208
+ 334 01a5 0D       		.uleb128 0xd
+ 335 01a6 1E000000 		.4byte	.LVL15
+ 336 01aa EB000000 		.4byte	0xeb
+ 337 01ae 0A       		.uleb128 0xa
+ 338 01af 01       		.uleb128 0x1
+ 339 01b0 50       		.byte	0x50
+ 340 01b1 01       		.uleb128 0x1
+ 341 01b2 30       		.byte	0x30
+ 342 01b3 00       		.byte	0
+ 343 01b4 00       		.byte	0
+ 344 01b5 0E       		.uleb128 0xe
+ 345 01b6 48010000 		.4byte	.LASF34
+ 346 01ba 07       		.byte	0x7
+ 347 01bb 1207     		.2byte	0x712
+ 348 01bd C1010000 		.4byte	0x1c1
+ 349 01c1 0F       		.uleb128 0xf
+ 350 01c2 8C000000 		.4byte	0x8c
+ 351 01c6 10       		.uleb128 0x10
+ 352 01c7 6C020000 		.4byte	.LASF20
+ 353 01cb 6C020000 		.4byte	.LASF20
+ 354 01cf 04       		.byte	0x4
+ 355 01d0 3A       		.byte	0x3a
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\ccUcg9fw.s 			page 8
+
+
+ 356 01d1 10       		.uleb128 0x10
+ 357 01d2 FB010000 		.4byte	.LASF21
+ 358 01d6 FB010000 		.4byte	.LASF21
+ 359 01da 04       		.byte	0x4
+ 360 01db 3D       		.byte	0x3d
+ 361 01dc 10       		.uleb128 0x10
+ 362 01dd 0A010000 		.4byte	.LASF22
+ 363 01e1 0A010000 		.4byte	.LASF22
+ 364 01e5 05       		.byte	0x5
+ 365 01e6 25       		.byte	0x25
+ 366 01e7 10       		.uleb128 0x10
+ 367 01e8 37020000 		.4byte	.LASF23
+ 368 01ec 37020000 		.4byte	.LASF23
+ 369 01f0 04       		.byte	0x4
+ 370 01f1 3E       		.byte	0x3e
+ 371 01f2 10       		.uleb128 0x10
+ 372 01f3 EB010000 		.4byte	.LASF24
+ 373 01f7 EB010000 		.4byte	.LASF24
+ 374 01fb 05       		.byte	0x5
+ 375 01fc 27       		.byte	0x27
+ 376 01fd 10       		.uleb128 0x10
+ 377 01fe 9E020000 		.4byte	.LASF25
+ 378 0202 9E020000 		.4byte	.LASF25
+ 379 0206 06       		.byte	0x6
+ 380 0207 76       		.byte	0x76
+ 381 0208 10       		.uleb128 0x10
+ 382 0209 45000000 		.4byte	.LASF26
+ 383 020d 45000000 		.4byte	.LASF26
+ 384 0211 04       		.byte	0x4
+ 385 0212 55       		.byte	0x55
+ 386 0213 00       		.byte	0
+ 387              		.section	.debug_abbrev,"",%progbits
+ 388              	.Ldebug_abbrev0:
+ 389 0000 01       		.uleb128 0x1
+ 390 0001 11       		.uleb128 0x11
+ 391 0002 01       		.byte	0x1
+ 392 0003 25       		.uleb128 0x25
+ 393 0004 0E       		.uleb128 0xe
+ 394 0005 13       		.uleb128 0x13
+ 395 0006 0B       		.uleb128 0xb
+ 396 0007 03       		.uleb128 0x3
+ 397 0008 0E       		.uleb128 0xe
+ 398 0009 1B       		.uleb128 0x1b
+ 399 000a 0E       		.uleb128 0xe
+ 400 000b 55       		.uleb128 0x55
+ 401 000c 17       		.uleb128 0x17
+ 402 000d 11       		.uleb128 0x11
+ 403 000e 01       		.uleb128 0x1
+ 404 000f 10       		.uleb128 0x10
+ 405 0010 17       		.uleb128 0x17
+ 406 0011 00       		.byte	0
+ 407 0012 00       		.byte	0
+ 408 0013 02       		.uleb128 0x2
+ 409 0014 24       		.uleb128 0x24
+ 410 0015 00       		.byte	0
+ 411 0016 0B       		.uleb128 0xb
+ 412 0017 0B       		.uleb128 0xb
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\ccUcg9fw.s 			page 9
+
+
+ 413 0018 3E       		.uleb128 0x3e
+ 414 0019 0B       		.uleb128 0xb
+ 415 001a 03       		.uleb128 0x3
+ 416 001b 0E       		.uleb128 0xe
+ 417 001c 00       		.byte	0
+ 418 001d 00       		.byte	0
+ 419 001e 03       		.uleb128 0x3
+ 420 001f 16       		.uleb128 0x16
+ 421 0020 00       		.byte	0
+ 422 0021 03       		.uleb128 0x3
+ 423 0022 0E       		.uleb128 0xe
+ 424 0023 3A       		.uleb128 0x3a
+ 425 0024 0B       		.uleb128 0xb
+ 426 0025 3B       		.uleb128 0x3b
+ 427 0026 0B       		.uleb128 0xb
+ 428 0027 49       		.uleb128 0x49
+ 429 0028 13       		.uleb128 0x13
+ 430 0029 00       		.byte	0
+ 431 002a 00       		.byte	0
+ 432 002b 04       		.uleb128 0x4
+ 433 002c 24       		.uleb128 0x24
+ 434 002d 00       		.byte	0
+ 435 002e 0B       		.uleb128 0xb
+ 436 002f 0B       		.uleb128 0xb
+ 437 0030 3E       		.uleb128 0x3e
+ 438 0031 0B       		.uleb128 0xb
+ 439 0032 03       		.uleb128 0x3
+ 440 0033 08       		.uleb128 0x8
+ 441 0034 00       		.byte	0
+ 442 0035 00       		.byte	0
+ 443 0036 05       		.uleb128 0x5
+ 444 0037 2E       		.uleb128 0x2e
+ 445 0038 01       		.byte	0x1
+ 446 0039 3F       		.uleb128 0x3f
+ 447 003a 19       		.uleb128 0x19
+ 448 003b 03       		.uleb128 0x3
+ 449 003c 0E       		.uleb128 0xe
+ 450 003d 3A       		.uleb128 0x3a
+ 451 003e 0B       		.uleb128 0xb
+ 452 003f 3B       		.uleb128 0x3b
+ 453 0040 0B       		.uleb128 0xb
+ 454 0041 11       		.uleb128 0x11
+ 455 0042 01       		.uleb128 0x1
+ 456 0043 12       		.uleb128 0x12
+ 457 0044 06       		.uleb128 0x6
+ 458 0045 40       		.uleb128 0x40
+ 459 0046 18       		.uleb128 0x18
+ 460 0047 9742     		.uleb128 0x2117
+ 461 0049 19       		.uleb128 0x19
+ 462 004a 01       		.uleb128 0x1
+ 463 004b 13       		.uleb128 0x13
+ 464 004c 00       		.byte	0
+ 465 004d 00       		.byte	0
+ 466 004e 06       		.uleb128 0x6
+ 467 004f 898201   		.uleb128 0x4109
+ 468 0052 00       		.byte	0
+ 469 0053 11       		.uleb128 0x11
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\ccUcg9fw.s 			page 10
+
+
+ 470 0054 01       		.uleb128 0x1
+ 471 0055 31       		.uleb128 0x31
+ 472 0056 13       		.uleb128 0x13
+ 473 0057 00       		.byte	0
+ 474 0058 00       		.byte	0
+ 475 0059 07       		.uleb128 0x7
+ 476 005a 2E       		.uleb128 0x2e
+ 477 005b 01       		.byte	0x1
+ 478 005c 3F       		.uleb128 0x3f
+ 479 005d 19       		.uleb128 0x19
+ 480 005e 03       		.uleb128 0x3
+ 481 005f 0E       		.uleb128 0xe
+ 482 0060 3A       		.uleb128 0x3a
+ 483 0061 0B       		.uleb128 0xb
+ 484 0062 3B       		.uleb128 0x3b
+ 485 0063 0B       		.uleb128 0xb
+ 486 0064 27       		.uleb128 0x27
+ 487 0065 19       		.uleb128 0x19
+ 488 0066 11       		.uleb128 0x11
+ 489 0067 01       		.uleb128 0x1
+ 490 0068 12       		.uleb128 0x12
+ 491 0069 06       		.uleb128 0x6
+ 492 006a 40       		.uleb128 0x40
+ 493 006b 18       		.uleb128 0x18
+ 494 006c 9742     		.uleb128 0x2117
+ 495 006e 19       		.uleb128 0x19
+ 496 006f 01       		.uleb128 0x1
+ 497 0070 13       		.uleb128 0x13
+ 498 0071 00       		.byte	0
+ 499 0072 00       		.byte	0
+ 500 0073 08       		.uleb128 0x8
+ 501 0074 05       		.uleb128 0x5
+ 502 0075 00       		.byte	0
+ 503 0076 03       		.uleb128 0x3
+ 504 0077 0E       		.uleb128 0xe
+ 505 0078 3A       		.uleb128 0x3a
+ 506 0079 0B       		.uleb128 0xb
+ 507 007a 3B       		.uleb128 0x3b
+ 508 007b 0B       		.uleb128 0xb
+ 509 007c 49       		.uleb128 0x49
+ 510 007d 13       		.uleb128 0x13
+ 511 007e 02       		.uleb128 0x2
+ 512 007f 17       		.uleb128 0x17
+ 513 0080 00       		.byte	0
+ 514 0081 00       		.byte	0
+ 515 0082 09       		.uleb128 0x9
+ 516 0083 898201   		.uleb128 0x4109
+ 517 0086 01       		.byte	0x1
+ 518 0087 11       		.uleb128 0x11
+ 519 0088 01       		.uleb128 0x1
+ 520 0089 31       		.uleb128 0x31
+ 521 008a 13       		.uleb128 0x13
+ 522 008b 01       		.uleb128 0x1
+ 523 008c 13       		.uleb128 0x13
+ 524 008d 00       		.byte	0
+ 525 008e 00       		.byte	0
+ 526 008f 0A       		.uleb128 0xa
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\ccUcg9fw.s 			page 11
+
+
+ 527 0090 8A8201   		.uleb128 0x410a
+ 528 0093 00       		.byte	0
+ 529 0094 02       		.uleb128 0x2
+ 530 0095 18       		.uleb128 0x18
+ 531 0096 9142     		.uleb128 0x2111
+ 532 0098 18       		.uleb128 0x18
+ 533 0099 00       		.byte	0
+ 534 009a 00       		.byte	0
+ 535 009b 0B       		.uleb128 0xb
+ 536 009c 2E       		.uleb128 0x2e
+ 537 009d 01       		.byte	0x1
+ 538 009e 3F       		.uleb128 0x3f
+ 539 009f 19       		.uleb128 0x19
+ 540 00a0 03       		.uleb128 0x3
+ 541 00a1 0E       		.uleb128 0xe
+ 542 00a2 3A       		.uleb128 0x3a
+ 543 00a3 0B       		.uleb128 0xb
+ 544 00a4 3B       		.uleb128 0x3b
+ 545 00a5 0B       		.uleb128 0xb
+ 546 00a6 27       		.uleb128 0x27
+ 547 00a7 19       		.uleb128 0x19
+ 548 00a8 49       		.uleb128 0x49
+ 549 00a9 13       		.uleb128 0x13
+ 550 00aa 11       		.uleb128 0x11
+ 551 00ab 01       		.uleb128 0x1
+ 552 00ac 12       		.uleb128 0x12
+ 553 00ad 06       		.uleb128 0x6
+ 554 00ae 40       		.uleb128 0x40
+ 555 00af 18       		.uleb128 0x18
+ 556 00b0 9742     		.uleb128 0x2117
+ 557 00b2 19       		.uleb128 0x19
+ 558 00b3 01       		.uleb128 0x1
+ 559 00b4 13       		.uleb128 0x13
+ 560 00b5 00       		.byte	0
+ 561 00b6 00       		.byte	0
+ 562 00b7 0C       		.uleb128 0xc
+ 563 00b8 34       		.uleb128 0x34
+ 564 00b9 00       		.byte	0
+ 565 00ba 03       		.uleb128 0x3
+ 566 00bb 0E       		.uleb128 0xe
+ 567 00bc 3A       		.uleb128 0x3a
+ 568 00bd 0B       		.uleb128 0xb
+ 569 00be 3B       		.uleb128 0x3b
+ 570 00bf 0B       		.uleb128 0xb
+ 571 00c0 49       		.uleb128 0x49
+ 572 00c1 13       		.uleb128 0x13
+ 573 00c2 02       		.uleb128 0x2
+ 574 00c3 17       		.uleb128 0x17
+ 575 00c4 00       		.byte	0
+ 576 00c5 00       		.byte	0
+ 577 00c6 0D       		.uleb128 0xd
+ 578 00c7 898201   		.uleb128 0x4109
+ 579 00ca 01       		.byte	0x1
+ 580 00cb 11       		.uleb128 0x11
+ 581 00cc 01       		.uleb128 0x1
+ 582 00cd 31       		.uleb128 0x31
+ 583 00ce 13       		.uleb128 0x13
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\ccUcg9fw.s 			page 12
+
+
+ 584 00cf 00       		.byte	0
+ 585 00d0 00       		.byte	0
+ 586 00d1 0E       		.uleb128 0xe
+ 587 00d2 34       		.uleb128 0x34
+ 588 00d3 00       		.byte	0
+ 589 00d4 03       		.uleb128 0x3
+ 590 00d5 0E       		.uleb128 0xe
+ 591 00d6 3A       		.uleb128 0x3a
+ 592 00d7 0B       		.uleb128 0xb
+ 593 00d8 3B       		.uleb128 0x3b
+ 594 00d9 05       		.uleb128 0x5
+ 595 00da 49       		.uleb128 0x49
+ 596 00db 13       		.uleb128 0x13
+ 597 00dc 3F       		.uleb128 0x3f
+ 598 00dd 19       		.uleb128 0x19
+ 599 00de 3C       		.uleb128 0x3c
+ 600 00df 19       		.uleb128 0x19
+ 601 00e0 00       		.byte	0
+ 602 00e1 00       		.byte	0
+ 603 00e2 0F       		.uleb128 0xf
+ 604 00e3 35       		.uleb128 0x35
+ 605 00e4 00       		.byte	0
+ 606 00e5 49       		.uleb128 0x49
+ 607 00e6 13       		.uleb128 0x13
+ 608 00e7 00       		.byte	0
+ 609 00e8 00       		.byte	0
+ 610 00e9 10       		.uleb128 0x10
+ 611 00ea 2E       		.uleb128 0x2e
+ 612 00eb 00       		.byte	0
+ 613 00ec 3F       		.uleb128 0x3f
+ 614 00ed 19       		.uleb128 0x19
+ 615 00ee 3C       		.uleb128 0x3c
+ 616 00ef 19       		.uleb128 0x19
+ 617 00f0 6E       		.uleb128 0x6e
+ 618 00f1 0E       		.uleb128 0xe
+ 619 00f2 03       		.uleb128 0x3
+ 620 00f3 0E       		.uleb128 0xe
+ 621 00f4 3A       		.uleb128 0x3a
+ 622 00f5 0B       		.uleb128 0xb
+ 623 00f6 3B       		.uleb128 0x3b
+ 624 00f7 0B       		.uleb128 0xb
+ 625 00f8 00       		.byte	0
+ 626 00f9 00       		.byte	0
+ 627 00fa 00       		.byte	0
+ 628              		.section	.debug_loc,"",%progbits
+ 629              	.Ldebug_loc0:
+ 630              	.LLST0:
+ 631 0000 00000000 		.4byte	.LVL3
+ 632 0004 07000000 		.4byte	.LVL4-1
+ 633 0008 0100     		.2byte	0x1
+ 634 000a 50       		.byte	0x50
+ 635 000b 07000000 		.4byte	.LVL4-1
+ 636 000f 1A000000 		.4byte	.LFE64
+ 637 0013 0400     		.2byte	0x4
+ 638 0015 F3       		.byte	0xf3
+ 639 0016 01       		.uleb128 0x1
+ 640 0017 50       		.byte	0x50
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\ccUcg9fw.s 			page 13
+
+
+ 641 0018 9F       		.byte	0x9f
+ 642 0019 00000000 		.4byte	0
+ 643 001d 00000000 		.4byte	0
+ 644              	.LLST1:
+ 645 0021 00000000 		.4byte	.LVL8
+ 646 0025 07000000 		.4byte	.LVL9-1
+ 647 0029 0100     		.2byte	0x1
+ 648 002b 50       		.byte	0x50
+ 649 002c 07000000 		.4byte	.LVL9-1
+ 650 0030 12000000 		.4byte	.LVL12
+ 651 0034 0400     		.2byte	0x4
+ 652 0036 F3       		.byte	0xf3
+ 653 0037 01       		.uleb128 0x1
+ 654 0038 50       		.byte	0x50
+ 655 0039 9F       		.byte	0x9f
+ 656 003a 12000000 		.4byte	.LVL12
+ 657 003e 15000000 		.4byte	.LVL13-1
+ 658 0042 0100     		.2byte	0x1
+ 659 0044 50       		.byte	0x50
+ 660 0045 15000000 		.4byte	.LVL13-1
+ 661 0049 22000000 		.4byte	.LFE65
+ 662 004d 0400     		.2byte	0x4
+ 663 004f F3       		.byte	0xf3
+ 664 0050 01       		.uleb128 0x1
+ 665 0051 50       		.byte	0x50
+ 666 0052 9F       		.byte	0x9f
+ 667 0053 00000000 		.4byte	0
+ 668 0057 00000000 		.4byte	0
+ 669              	.LLST2:
+ 670 005b 0A000000 		.4byte	.LVL10
+ 671 005f 12000000 		.4byte	.LVL12
+ 672 0063 0100     		.2byte	0x1
+ 673 0065 54       		.byte	0x54
+ 674 0066 18000000 		.4byte	.LVL14
+ 675 006a 22000000 		.4byte	.LFE65
+ 676 006e 0100     		.2byte	0x1
+ 677 0070 54       		.byte	0x54
+ 678 0071 00000000 		.4byte	0
+ 679 0075 00000000 		.4byte	0
+ 680              		.section	.debug_aranges,"",%progbits
+ 681 0000 2C000000 		.4byte	0x2c
+ 682 0004 0200     		.2byte	0x2
+ 683 0006 00000000 		.4byte	.Ldebug_info0
+ 684 000a 04       		.byte	0x4
+ 685 000b 00       		.byte	0
+ 686 000c 0000     		.2byte	0
+ 687 000e 0000     		.2byte	0
+ 688 0010 00000000 		.4byte	.LFB63
+ 689 0014 10000000 		.4byte	.LFE63-.LFB63
+ 690 0018 00000000 		.4byte	.LFB64
+ 691 001c 1A000000 		.4byte	.LFE64-.LFB64
+ 692 0020 00000000 		.4byte	.LFB65
+ 693 0024 22000000 		.4byte	.LFE65-.LFB65
+ 694 0028 00000000 		.4byte	0
+ 695 002c 00000000 		.4byte	0
+ 696              		.section	.debug_ranges,"",%progbits
+ 697              	.Ldebug_ranges0:
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\ccUcg9fw.s 			page 14
+
+
+ 698 0000 00000000 		.4byte	.LFB63
+ 699 0004 10000000 		.4byte	.LFE63
+ 700 0008 00000000 		.4byte	.LFB64
+ 701 000c 1A000000 		.4byte	.LFE64
+ 702 0010 00000000 		.4byte	.LFB65
+ 703 0014 22000000 		.4byte	.LFE65
+ 704 0018 00000000 		.4byte	0
+ 705 001c 00000000 		.4byte	0
+ 706              		.section	.debug_line,"",%progbits
+ 707              	.Ldebug_line0:
+ 708 0000 B3010000 		.section	.debug_str,"MS",%progbits,1
+ 708      02007301 
+ 708      00000201 
+ 708      FB0E0D00 
+ 708      01010101 
+ 709              	.LASF31:
+ 710 0000 73776974 		.ascii	"switch_multiplexer\000"
+ 710      63685F6D 
+ 710      756C7469 
+ 710      706C6578 
+ 710      657200
+ 711              	.LASF18:
+ 712 0013 6368616E 		.ascii	"channel\000"
+ 712      6E656C00 
+ 713              	.LASF19:
+ 714 001b 4D757853 		.ascii	"MuxSelect\000"
+ 714      656C6563 
+ 714      7400
+ 715              	.LASF5:
+ 716 0025 5F5F696E 		.ascii	"__int32_t\000"
+ 716      7433325F 
+ 716      7400
+ 717              	.LASF30:
+ 718 002f 696E6974 		.ascii	"init_pressure_sensors\000"
+ 718      5F707265 
+ 718      73737572 
+ 718      655F7365 
+ 718      6E736F72 
+ 719              	.LASF26:
+ 720 0045 4144435F 		.ascii	"ADC_DelSig_Read16\000"
+ 720      44656C53 
+ 720      69675F52 
+ 720      65616431 
+ 720      3600
+ 721              	.LASF13:
+ 722 0057 666C6F61 		.ascii	"float\000"
+ 722      7400
+ 723              	.LASF33:
+ 724 005d 70726573 		.ascii	"pressure_reading\000"
+ 724      73757265 
+ 724      5F726561 
+ 724      64696E67 
+ 724      00
+ 725              	.LASF1:
+ 726 006e 756E7369 		.ascii	"unsigned char\000"
+ 726      676E6564 
+ 726      20636861 
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\ccUcg9fw.s 			page 15
+
+
+ 726      7200
+ 727              	.LASF27:
+ 728 007c 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 728      43313120 
+ 728      352E342E 
+ 728      31203230 
+ 728      31363036 
+ 729 00af 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 729      20726576 
+ 729      6973696F 
+ 729      6E203233 
+ 729      37373135 
+ 730 00e2 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 730      66756E63 
+ 730      74696F6E 
+ 730      2D736563 
+ 730      74696F6E 
+ 731              	.LASF22:
+ 732 010a 414D7578 		.ascii	"AMux_Start\000"
+ 732      5F537461 
+ 732      727400
+ 733              	.LASF7:
+ 734 0115 6C6F6E67 		.ascii	"long unsigned int\000"
+ 734      20756E73 
+ 734      69676E65 
+ 734      6420696E 
+ 734      7400
+ 735              	.LASF3:
+ 736 0127 73686F72 		.ascii	"short unsigned int\000"
+ 736      7420756E 
+ 736      7369676E 
+ 736      65642069 
+ 736      6E7400
+ 737              	.LASF32:
+ 738 013a 72656164 		.ascii	"read_pressure\000"
+ 738      5F707265 
+ 738      73737572 
+ 738      6500
+ 739              	.LASF34:
+ 740 0148 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 740      52784275 
+ 740      66666572 
+ 740      00
+ 741              	.LASF29:
+ 742 0155 433A5C55 		.ascii	"C:\\Users\\shizh\\OneDrive\\Desktop\\123123\\ecmo_p"
+ 742      73657273 
+ 742      5C736869 
+ 742      7A685C4F 
+ 742      6E654472 
+ 743 0182 736F6335 		.ascii	"soc5_ws\\PSOC Code\\PSOC5 Implement.cydsn\000"
+ 743      5F77735C 
+ 743      50534F43 
+ 743      20436F64 
+ 743      655C5053 
+ 744              	.LASF14:
+ 745 01aa 646F7562 		.ascii	"double\000"
+ 745      6C6500
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\ccUcg9fw.s 			page 16
+
+
+ 746              	.LASF10:
+ 747 01b1 756E7369 		.ascii	"unsigned int\000"
+ 747      676E6564 
+ 747      20696E74 
+ 747      00
+ 748              	.LASF28:
+ 749 01be 50726573 		.ascii	"Pressure_Transducer.c\000"
+ 749      73757265 
+ 749      5F547261 
+ 749      6E736475 
+ 749      6365722E 
+ 750              	.LASF9:
+ 751 01d4 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 751      206C6F6E 
+ 751      6720756E 
+ 751      7369676E 
+ 751      65642069 
+ 752              	.LASF24:
+ 753 01eb 414D7578 		.ascii	"AMux_FastSelect\000"
+ 753      5F466173 
+ 753      7453656C 
+ 753      65637400 
+ 754              	.LASF21:
+ 755 01fb 4144435F 		.ascii	"ADC_DelSig_StartConvert\000"
+ 755      44656C53 
+ 755      69675F53 
+ 755      74617274 
+ 755      436F6E76 
+ 756              	.LASF12:
+ 757 0213 696E7433 		.ascii	"int32_t\000"
+ 757      325F7400 
+ 758              	.LASF17:
+ 759 021b 73697A65 		.ascii	"sizetype\000"
+ 759      74797065 
+ 759      00
+ 760              	.LASF8:
+ 761 0224 6C6F6E67 		.ascii	"long long int\000"
+ 761      206C6F6E 
+ 761      6720696E 
+ 761      7400
+ 762              	.LASF15:
+ 763 0232 63686172 		.ascii	"char\000"
+ 763      00
+ 764              	.LASF23:
+ 765 0237 4144435F 		.ascii	"ADC_DelSig_StopConvert\000"
+ 765      44656C53 
+ 765      69675F53 
+ 765      746F7043 
+ 765      6F6E7665 
+ 766              	.LASF2:
+ 767 024e 73686F72 		.ascii	"short int\000"
+ 767      7420696E 
+ 767      7400
+ 768              	.LASF4:
+ 769 0258 5F5F7569 		.ascii	"__uint16_t\000"
+ 769      6E743136 
+ 769      5F7400
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\ccUcg9fw.s 			page 17
+
+
+ 770              	.LASF11:
+ 771 0263 75696E74 		.ascii	"uint16_t\000"
+ 771      31365F74 
+ 771      00
+ 772              	.LASF20:
+ 773 026c 4144435F 		.ascii	"ADC_DelSig_Start\000"
+ 773      44656C53 
+ 773      69675F53 
+ 773      74617274 
+ 773      00
+ 774              	.LASF6:
+ 775 027d 6C6F6E67 		.ascii	"long int\000"
+ 775      20696E74 
+ 775      00
+ 776              	.LASF16:
+ 777 0286 6C6F6E67 		.ascii	"long double\000"
+ 777      20646F75 
+ 777      626C6500 
+ 778              	.LASF0:
+ 779 0292 7369676E 		.ascii	"signed char\000"
+ 779      65642063 
+ 779      68617200 
+ 780              	.LASF25:
+ 781 029e 43794465 		.ascii	"CyDelay\000"
+ 781      6C617900 
+ 782              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

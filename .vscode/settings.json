@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "pressure_transducer.h": "c",
+        "project.h": "c"
+    }
+}

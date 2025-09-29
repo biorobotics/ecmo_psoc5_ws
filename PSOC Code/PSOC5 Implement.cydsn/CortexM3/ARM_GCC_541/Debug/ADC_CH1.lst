@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 1
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\cca0Llrk.s 			page 1
 
 
    1              		.syntax unified
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 1
   28:Generated_Source\PSoC5/ADC_CH1.c **** *
   29:Generated_Source\PSoC5/ADC_CH1.c **** * \brief Writes the value to the physical port (data output register), masking
   30:Generated_Source\PSoC5/ADC_CH1.c **** *  and shifting the bits appropriately. 
-ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 2
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\cca0Llrk.s 			page 2
 
 
   31:Generated_Source\PSoC5/ADC_CH1.c **** *
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 1
   52              		.size	ADC_CH1_Write, .-ADC_CH1_Write
   53              		.section	.text.ADC_CH1_SetDriveMode,"ax",%progbits
   54              		.align	2
-ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 3
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\cca0Llrk.s 			page 3
 
 
   55              		.global	ADC_CH1_SetDriveMode
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 1
   77 0012 00BF     		.align	2
   78              	.L5:
   79 0014 1B500040 		.word	1073762331
-ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 4
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\cca0Llrk.s 			page 4
 
 
   80              		.cfi_endproc
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 1
  110              		.align	2
  111              		.global	ADC_CH1_ReadDataReg
  112              		.thumb
-ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 5
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\cca0Llrk.s 			page 5
 
 
  113              		.thumb_func
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 1
  139              	.Ldebug_info0:
  140 0000 1B010000 		.4byte	0x11b
  141 0004 0400     		.2byte	0x4
-ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 6
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\cca0Llrk.s 			page 6
 
 
  142 0006 00000000 		.4byte	.Ldebug_abbrev0
@@ -306,15 +306,15 @@ ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 1
  144 000b 01       		.uleb128 0x1
  145 000c 39000000 		.4byte	.LASF20
  146 0010 0C       		.byte	0xc
- 147 0011 13010000 		.4byte	.LASF21
- 148 0015 89010000 		.4byte	.LASF22
+ 147 0011 68010000 		.4byte	.LASF21
+ 148 0015 FE000000 		.4byte	.LASF22
  149 0019 00000000 		.4byte	.Ldebug_ranges0+0
  150 001d 00000000 		.4byte	0
  151 0021 00000000 		.4byte	.Ldebug_line0
  152 0025 02       		.uleb128 0x2
  153 0026 01       		.byte	0x1
  154 0027 06       		.byte	0x6
- 155 0028 DA010000 		.4byte	.LASF0
+ 155 0028 DE010000 		.4byte	.LASF0
  156 002c 02       		.uleb128 0x2
  157 002d 01       		.byte	0x1
  158 002e 08       		.byte	0x8
@@ -322,7 +322,7 @@ ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 1
  160 0033 02       		.uleb128 0x2
  161 0034 02       		.byte	0x2
  162 0035 05       		.byte	0x5
- 163 0036 70010000 		.4byte	.LASF2
+ 163 0036 C5010000 		.4byte	.LASF2
  164 003a 02       		.uleb128 0x2
  165 003b 02       		.byte	0x2
  166 003c 07       		.byte	0x7
@@ -330,7 +330,7 @@ ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 1
  168 0041 02       		.uleb128 0x2
  169 0042 04       		.byte	0x4
  170 0043 05       		.byte	0x5
- 171 0044 80010000 		.4byte	.LASF4
+ 171 0044 D5010000 		.4byte	.LASF4
  172 0048 02       		.uleb128 0x2
  173 0049 04       		.byte	0x4
  174 004a 07       		.byte	0x7
@@ -338,11 +338,11 @@ ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 1
  176 004f 02       		.uleb128 0x2
  177 0050 08       		.byte	0x8
  178 0051 05       		.byte	0x5
- 179 0052 5D010000 		.4byte	.LASF6
+ 179 0052 B2010000 		.4byte	.LASF6
  180 0056 02       		.uleb128 0x2
  181 0057 08       		.byte	0x8
  182 0058 07       		.byte	0x7
- 183 0059 41010000 		.4byte	.LASF7
+ 183 0059 96010000 		.4byte	.LASF7
  184 005d 03       		.uleb128 0x3
  185 005e 04       		.byte	0x4
  186 005f 05       		.byte	0x5
@@ -350,15 +350,15 @@ ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 1
  188 0064 02       		.uleb128 0x2
  189 0065 04       		.byte	0x4
  190 0066 07       		.byte	0x7
- 191 0067 34010000 		.4byte	.LASF8
+ 191 0067 89010000 		.4byte	.LASF8
  192 006b 04       		.uleb128 0x4
- 193 006c 7A010000 		.4byte	.LASF12
+ 193 006c CF010000 		.4byte	.LASF12
  194 0070 02       		.byte	0x2
  195 0071 E801     		.2byte	0x1e8
  196 0073 2C000000 		.4byte	0x2c
  197 0077 02       		.uleb128 0x2
  198 0078 04       		.byte	0x4
-ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 7
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\cca0Llrk.s 			page 7
 
 
  199 0079 04       		.byte	0x4
@@ -366,11 +366,11 @@ ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 1
  201 007e 02       		.uleb128 0x2
  202 007f 08       		.byte	0x8
  203 0080 04       		.byte	0x4
- 204 0081 FE000000 		.4byte	.LASF10
+ 204 0081 53010000 		.4byte	.LASF10
  205 0085 02       		.uleb128 0x2
  206 0086 01       		.byte	0x1
  207 0087 08       		.byte	0x8
- 208 0088 6B010000 		.4byte	.LASF11
+ 208 0088 C0010000 		.4byte	.LASF11
  209 008c 04       		.uleb128 0x4
  210 008d C7000000 		.4byte	.LASF13
  211 0091 02       		.byte	0x2
@@ -379,7 +379,7 @@ ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 1
  214 0098 05       		.uleb128 0x5
  215 0099 6B000000 		.4byte	0x6b
  216 009d 06       		.uleb128 0x6
- 217 009e 05010000 		.4byte	.LASF14
+ 217 009e 5A010000 		.4byte	.LASF14
  218 00a2 01       		.byte	0x1
  219 00a3 39       		.byte	0x39
  220 00a4 00000000 		.4byte	.LFB0
@@ -402,7 +402,7 @@ ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 1
  237 00cd 53       		.byte	0x53
  238 00ce 00       		.byte	0
  239 00cf 06       		.uleb128 0x6
- 240 00d0 E6010000 		.4byte	.LASF15
+ 240 00d0 EA010000 		.4byte	.LASF15
  241 00d4 01       		.byte	0x1
  242 00d5 5A       		.byte	0x5a
  243 00d6 00000000 		.4byte	.LFB1
@@ -411,14 +411,14 @@ ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 1
  246 00df 9C       		.byte	0x9c
  247 00e0 F4000000 		.4byte	0xf4
  248 00e4 07       		.uleb128 0x7
- 249 00e5 58010000 		.4byte	.LASF17
+ 249 00e5 AD010000 		.4byte	.LASF17
  250 00e9 01       		.byte	0x1
  251 00ea 5A       		.byte	0x5a
  252 00eb 6B000000 		.4byte	0x6b
  253 00ef 21000000 		.4byte	.LLST1
  254 00f3 00       		.byte	0
  255 00f4 09       		.uleb128 0x9
-ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 8
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\cca0Llrk.s 			page 8
 
 
  256 00f5 CC000000 		.4byte	.LASF18
@@ -478,7 +478,7 @@ ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 1
  310 0022 0B       		.uleb128 0xb
  311 0023 3E       		.uleb128 0x3e
  312 0024 0B       		.uleb128 0xb
-ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 9
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\cca0Llrk.s 			page 9
 
 
  313 0025 03       		.uleb128 0x3
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 1
  367 005c 3A       		.uleb128 0x3a
  368 005d 0B       		.uleb128 0xb
  369 005e 3B       		.uleb128 0x3b
-ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 10
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\cca0Llrk.s 			page 10
 
 
  370 005f 0B       		.uleb128 0xb
@@ -598,7 +598,7 @@ ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 1
  424 000a 50       		.byte	0x50
  425 000b 0A000000 		.4byte	.LVL2
  426 000f 18000000 		.4byte	.LFE0
-ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 11
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\cca0Llrk.s 			page 11
 
 
  427 0013 0400     		.2byte	0x4
@@ -658,7 +658,7 @@ ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 1
  480      02004400 
  480      00000201 
  480      FB0E0D00 
-ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 12
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\cca0Llrk.s 			page 12
 
 
  480      01010101 
@@ -718,77 +718,77 @@ ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 1
  502      7420756E 
  502      7369676E 
  502      65642069 
-ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 13
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\cca0Llrk.s 			page 13
 
 
  502      6E7400
- 503              	.LASF10:
- 504 00fe 646F7562 		.ascii	"double\000"
- 504      6C6500
- 505              	.LASF14:
- 506 0105 4144435F 		.ascii	"ADC_CH1_Write\000"
- 506      4348315F 
- 506      57726974 
- 506      6500
- 507              	.LASF21:
- 508 0113 47656E65 		.ascii	"Generated_Source\\PSoC5\\ADC_CH1.c\000"
- 508      72617465 
- 508      645F536F 
- 508      75726365 
- 508      5C50536F 
- 509              	.LASF8:
- 510 0134 756E7369 		.ascii	"unsigned int\000"
- 510      676E6564 
- 510      20696E74 
- 510      00
- 511              	.LASF7:
- 512 0141 6C6F6E67 		.ascii	"long long unsigned int\000"
- 512      206C6F6E 
- 512      6720756E 
- 512      7369676E 
- 512      65642069 
- 513              	.LASF17:
- 514 0158 6D6F6465 		.ascii	"mode\000"
- 514      00
- 515              	.LASF6:
- 516 015d 6C6F6E67 		.ascii	"long long int\000"
- 516      206C6F6E 
- 516      6720696E 
- 516      7400
- 517              	.LASF11:
- 518 016b 63686172 		.ascii	"char\000"
- 518      00
- 519              	.LASF2:
- 520 0170 73686F72 		.ascii	"short int\000"
- 520      7420696E 
- 520      7400
- 521              	.LASF12:
- 522 017a 75696E74 		.ascii	"uint8\000"
- 522      3800
- 523              	.LASF4:
- 524 0180 6C6F6E67 		.ascii	"long int\000"
- 524      20696E74 
- 524      00
- 525              	.LASF22:
- 526 0189 433A5C55 		.ascii	"C:\\Users\\29928\\OneDrive\\Documents\\PSoC Creator"
- 526      73657273 
- 526      5C323939 
- 526      32385C4F 
- 526      6E654472 
- 527 01b7 5C576F72 		.ascii	"\\Workspace04\\PSOC5 Implement.cydsn\000"
- 527      6B737061 
- 527      63653034 
-ARM GAS  C:\Users\29928\AppData\Local\Temp\ccaF4ARa.s 			page 14
+ 503              	.LASF22:
+ 504 00fe 433A5C55 		.ascii	"C:\\Users\\shizh\\OneDrive\\Desktop\\123123\\ecmo_p"
+ 504      73657273 
+ 504      5C736869 
+ 504      7A685C4F 
+ 504      6E654472 
+ 505 012b 736F6335 		.ascii	"soc5_ws\\PSOC Code\\PSOC5 Implement.cydsn\000"
+ 505      5F77735C 
+ 505      50534F43 
+ 505      20436F64 
+ 505      655C5053 
+ 506              	.LASF10:
+ 507 0153 646F7562 		.ascii	"double\000"
+ 507      6C6500
+ 508              	.LASF14:
+ 509 015a 4144435F 		.ascii	"ADC_CH1_Write\000"
+ 509      4348315F 
+ 509      57726974 
+ 509      6500
+ 510              	.LASF21:
+ 511 0168 47656E65 		.ascii	"Generated_Source\\PSoC5\\ADC_CH1.c\000"
+ 511      72617465 
+ 511      645F536F 
+ 511      75726365 
+ 511      5C50536F 
+ 512              	.LASF8:
+ 513 0189 756E7369 		.ascii	"unsigned int\000"
+ 513      676E6564 
+ 513      20696E74 
+ 513      00
+ 514              	.LASF7:
+ 515 0196 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 515      206C6F6E 
+ 515      6720756E 
+ 515      7369676E 
+ 515      65642069 
+ 516              	.LASF17:
+ 517 01ad 6D6F6465 		.ascii	"mode\000"
+ 517      00
+ 518              	.LASF6:
+ 519 01b2 6C6F6E67 		.ascii	"long long int\000"
+ 519      206C6F6E 
+ 519      6720696E 
+ 519      7400
+ 520              	.LASF11:
+ 521 01c0 63686172 		.ascii	"char\000"
+ 521      00
+ 522              	.LASF2:
+ 523 01c5 73686F72 		.ascii	"short int\000"
+ 523      7420696E 
+ 523      7400
+ 524              	.LASF12:
+ 525 01cf 75696E74 		.ascii	"uint8\000"
+ 525      3800
+ 526              	.LASF4:
+ 527 01d5 6C6F6E67 		.ascii	"long int\000"
+ARM GAS  C:\Users\shizh\AppData\Local\Temp\cca0Llrk.s 			page 14
 
 
- 527      5C50534F 
- 527      43352049 
+ 527      20696E74 
+ 527      00
  528              	.LASF0:
- 529 01da 7369676E 		.ascii	"signed char\000"
+ 529 01de 7369676E 		.ascii	"signed char\000"
  529      65642063 
  529      68617200 
  530              	.LASF15:
- 531 01e6 4144435F 		.ascii	"ADC_CH1_SetDriveMode\000"
+ 531 01ea 4144435F 		.ascii	"ADC_CH1_SetDriveMode\000"
  531      4348315F 
  531      53657444 
  531      72697665 

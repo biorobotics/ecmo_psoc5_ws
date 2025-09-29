@@ -15,18 +15,21 @@
 #include <string.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include "Pressure_Transducer.h"
 
 
-
-#define ADC_NUM_CHANNELS        4u
-#define ADC_SAMPLES_PER_PACKET  1u
-#define ADC_SAMPLE_RATE_DIV     10u
-#define MAX_PACKET_SIZE         255u
+#define ADC_NUM_CHANNELS                4u
+#define ADC_SAMPLES_PER_PACKET          1u
+#define ADC_PRESSURE_CHANNELS           2u
+#define ADC_SAMPLE_RATE_DIV             10u
+#define MAX_PACKET_SIZE                 255u
+#define PRESSURE_TRANSDUCER_TIME_SHIFT  5u
 static uint8_t packet[MAX_PACKET_SIZE];
 
 
 /* Foreground-background shared variables */
 volatile static bool dataReady = false;
+volatile static bool pressureDataReady = false;
 volatile static bool checkData = false;
 
 
@@ -36,6 +39,7 @@ static const float32 changeToleranceInterval = 0.3;
 
 volatile static float32 savedADC = 0;
 volatile int16_t ADCData[ADC_SAMPLES_PER_PACKET*ADC_NUM_CHANNELS];
+volatile int16_t ADCPressureData[ADC_PRESSURE_CHANNELS];
 
 
 /* Foreground variables */
@@ -48,6 +52,7 @@ static const uint8_t dataGood  =  0x0A;
 static const uint8_t testSuccess = 0xA1;
 static const uint8_t encryptionErrorCode = 0xF1;
 static const uint8_t unreasonableADCValueWarnCodex = 0xF2;
+static const uint8_t unreasonablePressureValueWarnCodex = 0xF4;
 static const uint32_t dataCompareInterval = 500;
 
 
@@ -89,9 +94,18 @@ CY_ISR (Timer_Interrupt_Handler)
 {
     (void)Timer_ISR_ReadStatusRegister();   // clear interrupt
     
-    
     timerCount++;
     timerCountDataCompare++;
+
+    // Read Pressure Transducer data with frequency 10 Hz
+    // Note: this is offset by PRESSURE_TRANSDUCER_TIME_SHIFT to avoid ADC and Pressure Transducer read at the same time
+    if ((timerCount + PRESSURE_TRANSDUCER_TIME_SHIFT) == ADC_SAMPLE_RATE_DIV) {
+        for (uint16_t i = 0; i < ADC_PRESSURE_CHANNELS; i++) {
+            ADCPressureData[i] = read_pressure(i);
+        }
+        pressureDataReady = true;
+    }
+
     // Read ADC conversion results with frequency 10 Hz (10 us latency)
     if (timerCount == ADC_SAMPLE_RATE_DIV) {
         timerCount = 0;        
@@ -100,7 +114,7 @@ CY_ISR (Timer_Interrupt_Handler)
         if (conversionStatus) {
             for (uint16_t i = 0; i < ADC_NUM_CHANNELS; i++) {
                 ADCData[i] = ADC_TS410_GetResult16(i);
-                CyDelay(1); //Delay to leave enough time for ADC conversion
+                CyDelay(1u); //Delay to leave enough time for ADC conversion
             }
             dataReady = true;            
             // Start next conversion
@@ -114,6 +128,7 @@ CY_ISR (Timer_Interrupt_Handler)
             CyDelay(5u); // wait 5 ms to signal error
         }        
     }
+
     if(timerCountDataCompare == dataCompareInterval){
         timerCountDataCompare = 0; 
         checkData = true;
@@ -146,30 +161,30 @@ int main(void)
     UART_RPI_PutArray(RPI_TX_Buffer,1);
     
     /*Initialize the ADC that converts TS410 amplified signal, and ADC that converts low voltage signal directly from Pressure Sensor*/
+    /*Initialize Pressure Transducer*/
     ADC_TS410_Start();
-    ADC_DelSig_Start();
+    init_pressure_sensors();
     
     /*Set up the NVIC vector of the ISR that would be called 10ms later*/
     Timer_Interrupt_StartEx(Timer_Interrupt_Handler);
     
     ADC_TS410_StartConvert();
     ADC_DelSig_StartConvert();
-    
-    
 
     Timer_ISR_Start();
-    
 
-    
     for(;;)
     {   
         /*Start packing only after all the required data are ready to send*/
         //printf("I hate this world\r\n");
         //UART_Debug_PutString("I hate this world\r\n");
-        if(dataReady == true){
+        if(dataReady == true && pressureDataReady == true){
             dataReady = false;
+            pressureDataReady = false;
             packetsize = 0;
             uint8_t opcode = dataGood;
+
+            // Pack ADC Data (TS410)
             for (uint8_t i = 0; i < ADC_NUM_CHANNELS; i++) {
                 /*Converting the count value read by ADC to float32 voltage*/
                 char buf_2[64];
@@ -203,7 +218,23 @@ int main(void)
                 //printf("ADC %d: %f, ", i, ADCVolts);
             }
             //USBUART_1_PutString("\r\n");
-            
+
+            // Pack Pressure Transducer Data
+            for (uint8_t i = 0; i < ADC_PRESSURE_CHANNELS; i++) {
+                // char buf_3[32];
+                // int n_3 = snprintf(buf_3, sizeof(buf_3), "Original Pressure Channel %d: V=%d V\r\n", i, ADCPressureData[i]);
+                // UART_Debug_PutString(buf_3);   // or *_PutString(buf) if null-terminated
+                // UART_Debug_PutString("\r\n");   // or *_PutString(buf) if null-terminated
+                float32 pressureVolts = /*(3.3/3.3) */ ADC_DelSig_CountsTo_Volts(ADCPressureData[i]);
+
+                if (pressureVolts > (3.3 + boundaryToleranceInterval) || pressureVolts < (0 - boundaryToleranceInterval)){
+                    opcode = unreasonablePressureValueWarnCodex;
+                }
+
+                float2Bytes(pressureVolts, &packet[packetsize]);
+                packetsize += sizeof(float32);
+            }
+
             wrap_data(opcode, packet, packetsize);
         }
         

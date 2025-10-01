@@ -25,7 +25,7 @@
       <Tool Name="postbuild" Command="" Options="" />
     </Toolchain>
   </Toolchains>
-  <Project Name="PSOC5 Implement" Path="C:\Users\shizh\OneDrive\Desktop\123123\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn" Version="6.0" Type="Normal">
+  <Project Name="PSOC5 Implement" Path="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn" Version="6.0" Type="Normal">
     <CMSIS_SVD_File>PSOC5 Implement.svd</CMSIS_SVD_File>
     <Datasheet />
     <LinkerFiles>
@@ -34,16 +34,16 @@
       <LinkerFile Toolchain="ARM IAR Generic">.\Generated_Source\PSoC5\Cm3Iar.icf</LinkerFile>
     </LinkerFiles>
     <Folders>
-      <Folder BuildType="STRICT" Path="C:\Users\shizh\OneDrive\Desktop\123123\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn">
-        <Files Root="C:\Users\shizh\OneDrive\Desktop\123123\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn">
+      <Folder BuildType="STRICT" Path="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn">
+        <Files Root="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn">
           <File BuildType="BUILD" Toolchain="">main.c</File>
           <File BuildType="BUILD" Toolchain="">Pressure_Transducer.c</File>
           <File BuildType="BUILD" Toolchain="">cyapicallbacks.h</File>
           <File BuildType="BUILD" Toolchain="">Pressure_Transducer.h</File>
         </Files>
       </Folder>
-      <Folder BuildType="STRICT" Path="C:\Users\shizh\OneDrive\Desktop\123123\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn\Generated_Source\PSoC5">
-        <Files Root="C:\Users\shizh\OneDrive\Desktop\123123\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn">
+      <Folder BuildType="STRICT" Path="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn\Generated_Source\PSoC5">
+        <Files Root="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn">
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\cyfitter_cfg.h</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\cyfitter_cfg.c</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\cymetadata.c</File>
@@ -62,6 +62,9 @@
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\cydisabledsheets.h</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\Clock_ISR.c</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\Clock_ISR.h</File>
+          <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\RST_UART_OEM_aliases.h</File>
+          <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\RST_UART_OEM.c</File>
+          <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\RST_UART_OEM.h</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\RX_OEM_aliases.h</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\RX_OEM.c</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\RX_OEM.h</File>
@@ -73,6 +76,9 @@
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\UART_OEM_PM.c</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\UART_OEM_INT.c</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\UART_OEM_BOOT.c</File>
+          <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\RST_UART_RPI_aliases.h</File>
+          <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\RST_UART_RPI.c</File>
+          <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\RST_UART_RPI.h</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\UART_RPI.c</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\UART_RPI.h</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\UART_RPI_PM.c</File>
@@ -182,52 +188,55 @@
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\ADC_DelSig_IRQ.h</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\ADC_DelSig_theACLK.c</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\ADC_DelSig_theACLK.h</File>
+          <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\Software_Reset_Signal_aliases.h</File>
+          <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\Software_Reset_Signal.c</File>
+          <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\Software_Reset_Signal.h</File>
         </Files>
       </Folder>
-      <Folder BuildType="STRICT" Path="C:\Users\shizh\OneDrive\Desktop\123123\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn\Export\ARM_GCC_Generic">
-        <Files Root="C:\Users\shizh\OneDrive\Desktop\123123\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn">
+      <Folder BuildType="STRICT" Path="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn\Export\ARM_GCC_Generic">
+        <Files Root="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn">
           <File BuildType="BUILD" Toolchain="ARM GCC Generic">.\Export\ARM_GCC_Generic\CyComponentLibrary.a</File>
         </Files>
       </Folder>
-      <Folder BuildType="STRICT" Path="C:\Users\shizh\OneDrive\Desktop\123123\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn\Export\ARM_MDK_Generic">
-        <Files Root="C:\Users\shizh\OneDrive\Desktop\123123\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn">
+      <Folder BuildType="STRICT" Path="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn\Export\ARM_MDK_Generic">
+        <Files Root="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn">
           <File BuildType="BUILD" Toolchain="ARM MDK Generic">.\Export\ARM_MDK_Generic\CyComponentLibrary.a</File>
         </Files>
       </Folder>
-      <Folder BuildType="STRICT" Path="C:\Users\shizh\OneDrive\Desktop\123123\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn\Export\ARM_IAR_Generic">
-        <Files Root="C:\Users\shizh\OneDrive\Desktop\123123\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn">
+      <Folder BuildType="STRICT" Path="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn\Export\ARM_IAR_Generic">
+        <Files Root="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn">
           <File BuildType="BUILD" Toolchain="ARM IAR Generic">.\Export\ARM_IAR_Generic\CyComponentLibrary.a</File>
         </Files>
       </Folder>
       <Folder BuildType="EXCLUDE" Path=".\codegentemp">
-        <Files Root="C:\Users\shizh\OneDrive\Desktop\123123\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn" />
+        <Files Root="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn" />
       </Folder>
       <Folder BuildType="EXCLUDE" Path=".\ARM_GCC_441">
-        <Files Root="C:\Users\shizh\OneDrive\Desktop\123123\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn" />
+        <Files Root="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn" />
       </Folder>
       <Folder BuildType="EXCLUDE" Path=".\ARM_GCC_473">
-        <Files Root="C:\Users\shizh\OneDrive\Desktop\123123\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn" />
+        <Files Root="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn" />
       </Folder>
       <Folder BuildType="EXCLUDE" Path=".\DP8051_Keil_952">
-        <Files Root="C:\Users\shizh\OneDrive\Desktop\123123\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn" />
+        <Files Root="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn" />
       </Folder>
       <Folder BuildType="EXCLUDE" Path=".\DP8051">
-        <Files Root="C:\Users\shizh\OneDrive\Desktop\123123\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn" />
+        <Files Root="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn" />
       </Folder>
       <Folder BuildType="EXCLUDE" Path=".\CortexM0">
-        <Files Root="C:\Users\shizh\OneDrive\Desktop\123123\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn" />
+        <Files Root="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn" />
       </Folder>
       <Folder BuildType="EXCLUDE" Path=".\CortexM0p">
-        <Files Root="C:\Users\shizh\OneDrive\Desktop\123123\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn" />
+        <Files Root="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn" />
       </Folder>
       <Folder BuildType="EXCLUDE" Path=".\CortexM3">
-        <Files Root="C:\Users\shizh\OneDrive\Desktop\123123\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn" />
+        <Files Root="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn" />
       </Folder>
       <Folder BuildType="EXCLUDE" Path=".\CortexM4">
-        <Files Root="C:\Users\shizh\OneDrive\Desktop\123123\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn" />
+        <Files Root="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn" />
       </Folder>
       <Folder BuildType="EXCLUDE" Path=".\CortexM7">
-        <Files Root="C:\Users\shizh\OneDrive\Desktop\123123\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn" />
+        <Files Root="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn" />
       </Folder>
     </Folders>
   </Project>

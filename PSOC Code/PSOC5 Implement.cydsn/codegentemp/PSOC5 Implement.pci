@@ -1,5 +1,5 @@
 # PSOC5 Implement
-# 2025-09-29 00:48:30Z
+# 2025-10-01 21:20:14Z
 
 # IO_0@[IOP=(1)][IoId=(0)] is reserved: SWDDebugEnabled
 dont_use_io iocell 1 0
@@ -13,13 +13,16 @@ set_io "RX_OEM(0)" iocell 1 6
 set_io "RX_RPI(0)" iocell 15 4
 set_io "TX_RPI(0)" iocell 15 5
 set_io "TX_Debug(0)" iocell 12 7
-set_io "ADC_CH0(0)" iocell 15 3
-set_io "ADC_CH3(0)" iocell 0 7
-set_io "ADC_CH2(0)" iocell 3 7
-set_io "ADC_CH1(0)" iocell 3 3
+set_io "ADC_CH0(0)" iocell 0 7
+set_io "ADC_CH3(0)" iocell 0 2
+set_io "ADC_CH2(0)" iocell 0 3
+set_io "ADC_CH1(0)" iocell 0 6
 set_io "Pressure_Before_Pos(0)" iocell 3 5
 set_io "Pressure_Before_Neg(0)" iocell 3 4
 set_io "Pressure_After_Pos(0)" iocell 0 4
 set_io "Pressure_After_Neg(0)" iocell 0 5
+set_io "RST_UART_RPI(0)" iocell 12 0
+set_io "RST_UART_OEM(0)" iocell 12 1
+set_io "Software_Reset_Signal(0)" iocell 2 4
 set_location "\ADC_TS410:SAR:ADC_SAR\" sarcell -1 -1 0
 set_location "\ADC_DelSig:DSM\" dsmodcell -1 -1 0

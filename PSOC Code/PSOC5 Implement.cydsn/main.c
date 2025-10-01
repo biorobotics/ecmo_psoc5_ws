@@ -157,7 +157,7 @@ int main(void)
 
     UART_Debug_PutString("Hello World!\r\n");
     /*Testing the UART Connection to RPI-5*/
-    RPI_TX_Buffer[0] = 0xA1;
+    RPI_TX_Buffer[0] = 0x0B;
     UART_RPI_PutArray(RPI_TX_Buffer,1);
     
     /*Initialize the ADC that converts TS410 amplified signal, and ADC that converts low voltage signal directly from Pressure Sensor*/
@@ -178,6 +178,11 @@ int main(void)
         /*Start packing only after all the required data are ready to send*/
         //printf("I hate this world\r\n");
         //UART_Debug_PutString("I hate this world\r\n");
+        if (Software_Reset_Signal_Read()){
+            CySoftwareReset();
+            continue;
+        }
+        
         if(dataReady == true && pressureDataReady == true){
             dataReady = false;
             pressureDataReady = false;

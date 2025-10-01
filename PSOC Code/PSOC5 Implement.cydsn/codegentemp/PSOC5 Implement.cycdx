@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <blockRegMap version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cypress.com/xsd/cyblockregmap cyblockregmap.xsd" xmlns="http://cypress.com/xsd/cyblockregmap">
-  <block name="ADC_CH2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="ADC_CH1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="AMux" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="Pressure_Before_Pos" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="Pressure_Before_Neg" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="ADC_DelSig" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false">
     <block name="Ext_CP_Clk" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="cy_analog_virtualmux_5" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
@@ -821,37 +822,34 @@
       </field>
     </register>
   </block>
-  <block name="Timer_Interrupt" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="ADC_CH0" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="ADC_CH3" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="AMux" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="Pressure_After_Neg" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="ADC_CH2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="ADC_CH1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="Software_Reset_Signal" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="cy_boot" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="Em_EEPROM_Dynamic" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="Pressure_Before_Pos" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="Pressure_Before_Neg" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="RST_UART_OEM" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="Pressure_After_Pos" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="USER_LED" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="Pressure_After_Neg" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="RST_UART_RPI" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="ADC_CH0" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="RX_OEM" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="RX_RPI" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="ZeroTerminal_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="Clock_ISR" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="TX_OEM" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="UART_OEM" BASE="0x0" SIZE="0x0" desc="UART" visible="true" hidden="false">
     <block name="IntClock" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="VirtualMux_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="BUART" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <register name="RX_UART_OEM_RX_ADDRESS1" address="0x4000642B" bitWidth="8" desc="RX Address1 Register" hidden="false" />
     <register name="RX_UART_OEM_RX_ADDRESS2" address="0x4000643B" bitWidth="8" desc="RX Address2 Register" hidden="false" />
-    <register name="TX_UART_OEM_TX_DATA" address="0x40006447" bitWidth="8" desc="TX Data Register" hidden="false" />
     <register name="RX_UART_OEM_RX_DATA" address="0x4000644B" bitWidth="8" desc="RX Data Register" hidden="false" />
-    <register name="TX_UART_OEM_TX_STATUS" address="0x40006467" bitWidth="8" desc="TX status register" hidden="false">
+    <register name="TX_UART_OEM_TX_STATUS" address="0x4000646C" bitWidth="8" desc="TX status register" hidden="false">
       <field name="UART_OEM_TX_STS_COMPLETE" from="0" to="0" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_OEM_TX_STS_FIFO_EMPTY" from="1" to="1" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_OEM_TX_STS_FIFO_FULL" from="2" to="2" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_OEM_TX_STS_FIFO_NOT_FULL" from="3" to="3" access="R" resetVal="" desc="" hidden="false" />
     </register>
-    <register name="RX_UART_OEM_RX_STATUS" address="0x40006469" bitWidth="8" desc="RX status register" hidden="false">
+    <register name="TX_UART_OEM_TX_DATA" address="0x40006547" bitWidth="8" desc="TX Data Register" hidden="false" />
+    <register name="RX_UART_OEM_RX_STATUS" address="0x40006567" bitWidth="8" desc="RX status register" hidden="false">
       <field name="UART_OEM_RX_STS_MRKSPC" from="0" to="0" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_OEM_RX_STS_BREAK" from="1" to="1" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_OEM_RX_STS_PAR_ERROR" from="2" to="2" access="R" resetVal="" desc="" hidden="false" />
@@ -861,18 +859,10 @@
       <field name="UART_OEM_RX_STS_ADDR_MATCH" from="6" to="6" access="R" resetVal="" desc="" hidden="false" />
     </register>
   </block>
-  <block name="UART_Debug" BASE="0x0" SIZE="0x0" desc="UART" visible="true" hidden="false">
-    <block name="BUART" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-    <block name="VirtualMux_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-    <block name="IntClock" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-    <register name="TX_UART_Debug_TX_DATA" address="0x4000644C" bitWidth="8" desc="TX Data Register" hidden="false" />
-    <register name="TX_UART_Debug_TX_STATUS" address="0x40006462" bitWidth="8" desc="TX status register" hidden="false">
-      <field name="UART_Debug_TX_STS_COMPLETE" from="0" to="0" access="R" resetVal="" desc="" hidden="false" />
-      <field name="UART_Debug_TX_STS_FIFO_EMPTY" from="1" to="1" access="R" resetVal="" desc="" hidden="false" />
-      <field name="UART_Debug_TX_STS_FIFO_FULL" from="2" to="2" access="R" resetVal="" desc="" hidden="false" />
-      <field name="UART_Debug_TX_STS_FIFO_NOT_FULL" from="3" to="3" access="R" resetVal="" desc="" hidden="false" />
-    </register>
-  </block>
+  <block name="USER_LED" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="ZeroTerminal_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="Clock_ISR" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="TX_OEM" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="Timer_ISR" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false">
     <block name="VirtualMux_2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="ZeroTerminal_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
@@ -981,15 +971,35 @@
     <block name="VirtualMux_4" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="bSAR_SEQ" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   </block>
+  <block name="Timer_Interrupt" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="UART_Debug" BASE="0x0" SIZE="0x0" desc="UART" visible="true" hidden="false">
+    <block name="BUART" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+    <block name="VirtualMux_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+    <block name="IntClock" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+    <register name="TX_UART_Debug_TX_DATA" address="0x40006544" bitWidth="8" desc="TX Data Register" hidden="false" />
+    <register name="TX_UART_Debug_TX_STATUS" address="0x40006564" bitWidth="8" desc="TX status register" hidden="false">
+      <field name="UART_Debug_TX_STS_COMPLETE" from="0" to="0" access="R" resetVal="" desc="" hidden="false" />
+      <field name="UART_Debug_TX_STS_FIFO_EMPTY" from="1" to="1" access="R" resetVal="" desc="" hidden="false" />
+      <field name="UART_Debug_TX_STS_FIFO_FULL" from="2" to="2" access="R" resetVal="" desc="" hidden="false" />
+      <field name="UART_Debug_TX_STS_FIFO_NOT_FULL" from="3" to="3" access="R" resetVal="" desc="" hidden="false" />
+    </register>
+  </block>
   <block name="TX_RPI" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="UART_RPI" BASE="0x0" SIZE="0x0" desc="UART" visible="true" hidden="false">
     <block name="IntClock" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="VirtualMux_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="BUART" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-    <register name="RX_UART_RPI_RX_ADDRESS1" address="0x4000642E" bitWidth="8" desc="RX Address1 Register" hidden="false" />
-    <register name="RX_UART_RPI_RX_ADDRESS2" address="0x4000643E" bitWidth="8" desc="RX Address2 Register" hidden="false" />
-    <register name="RX_UART_RPI_RX_DATA" address="0x4000644E" bitWidth="8" desc="RX Data Register" hidden="false" />
-    <register name="RX_UART_RPI_RX_STATUS" address="0x4000646D" bitWidth="8" desc="RX status register" hidden="false">
+    <register name="RX_UART_RPI_RX_ADDRESS1" address="0x4000642F" bitWidth="8" desc="RX Address1 Register" hidden="false" />
+    <register name="RX_UART_RPI_RX_ADDRESS2" address="0x4000643F" bitWidth="8" desc="RX Address2 Register" hidden="false" />
+    <register name="TX_UART_RPI_TX_DATA" address="0x40006444" bitWidth="8" desc="TX Data Register" hidden="false" />
+    <register name="RX_UART_RPI_RX_DATA" address="0x4000644F" bitWidth="8" desc="RX Data Register" hidden="false" />
+    <register name="TX_UART_RPI_TX_STATUS" address="0x40006464" bitWidth="8" desc="TX status register" hidden="false">
+      <field name="UART_RPI_TX_STS_COMPLETE" from="0" to="0" access="R" resetVal="" desc="" hidden="false" />
+      <field name="UART_RPI_TX_STS_FIFO_EMPTY" from="1" to="1" access="R" resetVal="" desc="" hidden="false" />
+      <field name="UART_RPI_TX_STS_FIFO_FULL" from="2" to="2" access="R" resetVal="" desc="" hidden="false" />
+      <field name="UART_RPI_TX_STS_FIFO_NOT_FULL" from="3" to="3" access="R" resetVal="" desc="" hidden="false" />
+    </register>
+    <register name="RX_UART_RPI_RX_STATUS" address="0x4000646F" bitWidth="8" desc="RX status register" hidden="false">
       <field name="UART_RPI_RX_STS_MRKSPC" from="0" to="0" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_RPI_RX_STS_BREAK" from="1" to="1" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_RPI_RX_STS_PAR_ERROR" from="2" to="2" access="R" resetVal="" desc="" hidden="false" />
@@ -997,13 +1007,6 @@
       <field name="UART_RPI_RX_STS_OVERRUN" from="4" to="4" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_RPI_RX_STS_FIFO_NOTEMPTY" from="5" to="5" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_RPI_RX_STS_ADDR_MATCH" from="6" to="6" access="R" resetVal="" desc="" hidden="false" />
-    </register>
-    <register name="TX_UART_RPI_TX_DATA" address="0x4000654A" bitWidth="8" desc="TX Data Register" hidden="false" />
-    <register name="TX_UART_RPI_TX_STATUS" address="0x40006569" bitWidth="8" desc="TX status register" hidden="false">
-      <field name="UART_RPI_TX_STS_COMPLETE" from="0" to="0" access="R" resetVal="" desc="" hidden="false" />
-      <field name="UART_RPI_TX_STS_FIFO_EMPTY" from="1" to="1" access="R" resetVal="" desc="" hidden="false" />
-      <field name="UART_RPI_TX_STS_FIFO_FULL" from="2" to="2" access="R" resetVal="" desc="" hidden="false" />
-      <field name="UART_RPI_TX_STS_FIFO_NOT_FULL" from="3" to="3" access="R" resetVal="" desc="" hidden="false" />
     </register>
   </block>
   <block name="TX_Debug" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />

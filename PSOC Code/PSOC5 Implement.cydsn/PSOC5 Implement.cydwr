@@ -454,15 +454,18 @@
       <Data key="2b9a2580-c561-4f5d-b5ec-79134aa32b29" value="Pressure_Before_Neg" />
       <Data key="3bc23e93-5337-4868-ba4c-1d81715fe8d1" value="Pressure_After_Pos" />
       <Data key="4daa49eb-a577-49fa-9ca4-c4aae7a36f63" value="Pressure_Before_Pos" />
-      <Data key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba" value="RST_UART_Debug" />
+      <Data key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba" value="RST_UART_RPI" />
       <Data key="525ecf85-5c60-4fa3-b527-812e66ee6aaf" value="ADC_CH1" />
+      <Data key="665e843c-c749-4ce4-9a81-208c83117dc4" value="Software_Reset_Signal" />
       <Data key="5348be0b-764b-46ef-81c3-fa0f2c339409" value="ADC_CH2" />
+      <Data key="5929cfe7-0485-4d22-9e79-de15473f6f97" value="RST_UART_Debug" />
       <Data key="77715107-f8d5-47e5-a629-0fb83101ac6b" value="ADC_CH0" />
       <Data key="aa1a5999-e403-45de-b3fe-5d7e88c29c5c" value="RST_UART_RPI" />
       <Data key="bcbb7be6-781a-4e00-ac93-a107890882d9" value="Pressure_After_Neg" />
       <Data key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/8b77a6c4-10a0-4390-971c-672353e2a49c" value="USBUART_1_Dm" />
       <Data key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/618a72fc-5ddd-4df5-958f-a3d55102db42" value="USBUART_1_Dp" />
       <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="USER_LED" />
+      <Data key="e4595e2c-ac49-4083-8b0b-6e9a8095ef1e" value="RST_UART_OEM" />
       <Data key="ed092b9b-d398-4703-be89-cebf998501f6" value="TX_Debug" />
       <Data key="f0e5f922-0c14-47ec-b5c3-f9543d0b051a" value="RX_RPI" />
       <Data key="f5ef3298-7134-4776-aa4f-f2ca06e1cdde" value="RST_UART_OEM" />
@@ -3580,6 +3583,11 @@
         <Data key="Port Format" value="12,0" />
       </Group>
     </Group>
+    <Group key="665e843c-c749-4ce4-9a81-208c83117dc4">
+      <Group key="0">
+        <Data key="Port Format" value="2,4" />
+      </Group>
+    </Group>
     <Group key="bcbb7be6-781a-4e00-ac93-a107890882d9">
       <Group key="0">
         <Data key="Port Format" value="0,5" />
@@ -3598,6 +3606,11 @@
     <Group key="e851a3b9-efb8-48be-bbb8-b303b216c393">
       <Group key="0">
         <Data key="Port Format" value="2,1" />
+      </Group>
+    </Group>
+    <Group key="e4595e2c-ac49-4083-8b0b-6e9a8095ef1e">
+      <Group key="0">
+        <Data key="Port Format" value="12,1" />
       </Group>
     </Group>
     <Group key="ed092b9b-d398-4703-be89-cebf998501f6">

@@ -291,6 +291,8 @@
 <name v=".\PSOC5 Implement.cydsn\main.c" />
 <name v=".\PSOC5 Implement.cydsn\TopDesign\TopDesign.cysch" />
 <name v=".\PSOC5 Implement.cydsn\PSOC5 Implement.cydwr" />
+<name v=".\PSOC5 Implement.cydsn\Generated_Source\PSoC5\UART_RPI.c" />
+<name v=".\PSOC5 Implement.cydsn\Generated_Source\PSoC5\Software_Reset_Signal.c" />
 </OpenDocs>
 <OpenDocsLayout><![CDATA[<?xml version="1.0"?><!--
 
@@ -298,7 +300,7 @@
   Copyright (c) 2001-2016 Actipro Software LLC.  All rights reserved.
   http://www.actiprosoftware.com
 
---><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="1392, 637" SelectedTabbedMdiWindow="6acc41e7-6217-411d-9112-91006722587e"><ToolWindow Key="Start Page:bd4649ab-da6b-4d04-a663-c722b8bf99db:Start Page" Guid="568bcd0e-cb87-40c5-b2d1-51dd4f915ec2" /><DocumentWindow Key="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn\main.c" Guid="f0843c49-5a51-45bf-8937-e4a31b929752" /><DocumentWindow Key="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn\TopDesign\TopDesign.cysch" Guid="324ea19f-416d-42f3-b435-24a192d41791" /><DocumentWindow Key="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn\PSOC5 Implement.cydwr" Guid="6acc41e7-6217-411d-9112-91006722587e" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
+--><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="1229, 637" SelectedTabbedMdiWindow="324ea19f-416d-42f3-b435-24a192d41791"><ToolWindow Key="Start Page:bd4649ab-da6b-4d04-a663-c722b8bf99db:Start Page" Guid="568bcd0e-cb87-40c5-b2d1-51dd4f915ec2" /><DocumentWindow Key="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn\main.c" Guid="f0843c49-5a51-45bf-8937-e4a31b929752" /><DocumentWindow Key="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn\TopDesign\TopDesign.cysch" Guid="324ea19f-416d-42f3-b435-24a192d41791" /><DocumentWindow Key="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn\PSOC5 Implement.cydwr" Guid="6acc41e7-6217-411d-9112-91006722587e" /><DocumentWindow Key="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn\Generated_Source\PSoC5\UART_RPI.c" Guid="6df03582-963c-465f-98c8-b3b2d3a74f48" /><DocumentWindow Key="C:\Users\29928\OneDrive\Desktop\PSoC5\ecmo_psoc5_ws\PSOC Code\PSOC5 Implement.cydsn\Generated_Source\PSoC5\Software_Reset_Signal.c" Guid="851fe873-721c-4e78-beae-93137f98a46a" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
 <config v="" />
 <AutoUpdate v="true" />
 </CyGuid_843a90a4-0c4b-4e44-991d-05e7fb117a21>

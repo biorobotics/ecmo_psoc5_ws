@@ -178,10 +178,10 @@ int main(void)
         /*Start packing only after all the required data are ready to send*/
         //printf("I hate this world\r\n");
         //UART_Debug_PutString("I hate this world\r\n");
-        if (Software_Reset_Signal_Read()){
+        /*if (Software_Reset_Signal_Read()){
             CySoftwareReset();
             continue;
-        }
+        }*/
         
         if(dataReady == true && pressureDataReady == true){
             dataReady = false;

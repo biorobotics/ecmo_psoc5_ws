@@ -91,7 +91,7 @@ def s3_upload_worker():
         file_to_upload = upload_queue.get()
         if file_to_upload is None:
             break  # Exit the thread
-        # upload_to_s3(file_to_upload, S3_BUCKET)
+        upload_to_s3(file_to_upload, S3_BUCKET)
         upload_queue.task_done()
 
 def ema_worker():
@@ -106,9 +106,9 @@ def ema_worker():
         ema_queue.task_done()
 
 # Start the upload and EMA worker threads
-upload_thread = Thread(target=s3_upload_worker)
-upload_thread.daemon = True
-upload_thread.start()
+# upload_thread = Thread(target=s3_upload_worker)
+# upload_thread.daemon = True
+# upload_thread.start()
 
 # comment out EMA function for now
 # ema_thread = Thread(target=ema_worker)
@@ -314,9 +314,9 @@ def process_data():
         print("UART started.")
         return
 
-    if dataLength != 40:
-        print(f"Warning: Unexpected data length {dataLength}, expecting 40 (6 float32 + 8 int16).")
-        return
+    # if dataLength != 40:
+    #     print(f"Warning: Unexpected data length {dataLength}, expecting 40 (6 float32 + 8 int16).")
+    #     return
     
     if opCode == 0xF1:
         print("Encryption Driver Error: PSOC looped. Please power-cycle the PSOC.")
@@ -478,3 +478,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

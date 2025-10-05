@@ -18,41 +18,49 @@
 #include "Pressure_Transducer.h"
 
 
+
 #define ADC_NUM_CHANNELS                4u
 #define ADC_SAMPLES_PER_PACKET          1u
 #define ADC_PRESSURE_CHANNELS           2u
-#define ADC_SAMPLE_RATE_DIV             10u
 #define MAX_PACKET_SIZE                 255u
+#define ADC_SAMPLE_RATE_DIV             10u
 #define PRESSURE_TRANSDUCER_TIME_SHIFT  5u
-static uint8_t packet[MAX_PACKET_SIZE];
+#define OEM_POLL_DIV                    10u
+#define OEM_TIMEOUT_MS                  10u
 
+static uint16_t oem_scale_factor_ml_min = 0u;
+static bool     oem_scale_valid = false;
 
 /* Foreground-background shared variables */
 volatile static bool dataReady = false;
 volatile static bool pressureDataReady = false;
+volatile static bool oemPollDue = false;
 volatile static bool checkData = false;
-
 
 static const float32 boundaryToleranceInterval = 0.1;
 static const float32 changeToleranceInterval = 0.3;
-
 
 volatile static float32 savedADC = 0;
 volatile int16_t ADCData[ADC_SAMPLES_PER_PACKET*ADC_NUM_CHANNELS];
 volatile int16_t ADCPressureData[ADC_PRESSURE_CHANNELS];
 
-
 /* Foreground variables */
-volatile uint16_t timerCount = 0;
-volatile uint16_t timerCountDataCompare = 0;
+static volatile uint16_t timerCount = 0;
+static volatile uint16_t timerCountDataCompare = 0;
+static volatile uint16_t oemPollCtr = 0;
+
 /* Background variables */
 static uint8_t RPI_TX_Buffer[MAX_PACKET_SIZE + 3];
+static uint8_t packet[MAX_PACKET_SIZE];
 
 static const uint8_t dataGood  =  0x0A;
-static const uint8_t testSuccess = 0xA1;
-static const uint8_t encryptionErrorCode = 0xF1;
-static const uint8_t unreasonableADCValueWarnCodex = 0xF2;
-static const uint8_t unreasonablePressureValueWarnCodex = 0xF4;
+static const uint8_t testSuccess = 0x0B;
+static const uint8_t EncryptionErrorCode = 0xF1;
+static const uint8_t ADCOORWarnCode = 0xF2;
+static const uint8_t ADCJumpWarnCode = 0xF3;
+static const uint8_t PressureOORWarnCode = 0xF4;
+static const uint8_t FlowInitErrorCode = 0xF5;
+static const uint8_t FlowDataWarnCode = 0xF6;
 static const uint32_t dataCompareInterval = 500;
 
 
@@ -81,12 +89,17 @@ static const uint8_t crcTable[256] = {
 
 void Timer_Interrupt_Handler(void);
 
-uint8_t calculateCRC8(uint8_t opCode, uint8_t dataLength, uint8_t* data);
+static bool OEM_Read2(uint8_t *msb, uint8_t *lsb, uint32_t timeout_ms);
+static bool OEM_ReadF(float *flow_ml_min, uint8_t *good);
+static bool OEM_ReadP(float *phase_deg);
+static bool OEM_ReadAmp(float *nrsaA_pct, float *nrsaB_pct, float *dA_pct, float *dB_pct);
 
 void wrap_data(uint8_t opcode, uint8_t* data, uint8_t length);
 
 void float2Bytes(float32 val, uint8_t *bytes_array);
 void u16Int2Bytes(uint16_t val, uint8_t *bytes_array);
+
+uint8_t calculateCRC8(uint8_t opCode, uint8_t dataLength, uint8_t* data);
 
 
 
@@ -96,6 +109,7 @@ CY_ISR (Timer_Interrupt_Handler)
     
     timerCount++;
     timerCountDataCompare++;
+    oemPollCtr++;
 
     // Read Pressure Transducer data with frequency 10 Hz
     // Note: this is offset by PRESSURE_TRANSDUCER_TIME_SHIFT to avoid ADC and Pressure Transducer read at the same time
@@ -114,7 +128,7 @@ CY_ISR (Timer_Interrupt_Handler)
         if (conversionStatus) {
             for (uint16_t i = 0; i < ADC_NUM_CHANNELS; i++) {
                 ADCData[i] = ADC_TS410_GetResult16(i);
-                CyDelay(1u); //Delay to leave enough time for ADC conversion
+                CyDelay(1u); // Should not delay in ISR
             }
             dataReady = true;            
             // Start next conversion
@@ -124,8 +138,6 @@ CY_ISR (Timer_Interrupt_Handler)
             for (uint16_t i = 0; i < ADC_NUM_CHANNELS; i++) {
                 ADCData[i] = 0;
             }
-            // printf("error: Conversion not finished yet!");
-            CyDelay(5u); // wait 5 ms to signal error
         }        
     }
 
@@ -133,8 +145,13 @@ CY_ISR (Timer_Interrupt_Handler)
         timerCountDataCompare = 0; 
         checkData = true;
     }
+
+    // Polling for OEM data reading
+    if (oemPollCtr >= OEM_POLL_DIV) {
+        oemPollCtr = 0;
+        oemPollDue = true;
+    }
   
-    
     /*static uint16_t div = 0;                // divide the tick rate
     if (++div >= 100) {                     // e.g., at 1 kHz tick -> ~1 Hz blink
         div = 0;
@@ -144,9 +161,12 @@ CY_ISR (Timer_Interrupt_Handler)
 }
 
 
+
+static inline uint16_t be16_u(const uint8_t msb, const uint8_t lsb)
+{ return ((uint16_t)msb << 8) | (uint16_t)lsb; }
+
 int main(void)
 {
-    
     CyGlobalIntEnable; /* Enable global interrupts. */
     uint8_t packetsize = 0;
     
@@ -157,8 +177,44 @@ int main(void)
 
     UART_Debug_PutString("Hello World!\r\n");
     /*Testing the UART Connection to RPI-5*/
-    RPI_TX_Buffer[0] = 0xA1;
-    UART_RPI_PutArray(RPI_TX_Buffer,1);
+    
+    RPI_TX_Buffer[0] = testSuccess;
+    RPI_TX_Buffer[1] = 2;
+    UART_RPI_PutArray(RPI_TX_Buffer,5);
+    
+    // Get status from the flow sensor
+    while (UART_OEM_GetRxBufferSize() > 0) { (void)UART_OEM_GetChar(); }
+    UART_OEM_PutChar('S');
+    uint8_t b0=0, b1=0;
+    bool got2 = OEM_Read2(&b0, &b1, 50u);
+    if (!got2) {
+        uint8_t payload[2]; 
+        u16Int2Bytes(0xFFFFu, payload);
+        wrap_data(FlowInitErrorCode, payload, sizeof(payload));
+    }
+    else {
+        uint16_t status = be16_u(b0, b1);
+        if (((status & 0x8000u) == 0u) || ((status & 0x0001u) == 0u)) {
+            uint8_t payload[2]; 
+            u16Int2Bytes(status, payload);
+            wrap_data(FlowInitErrorCode, payload, sizeof(payload));
+        }
+    }
+
+    // Check other things like toggling in the future
+
+    UART_OEM_PutChar('C');
+    got2 = OEM_Read2(&b0, &b1, 50u);
+    if (!got2) {
+        uint8_t payload[2]; 
+        u16Int2Bytes(0xEEEEu, payload);
+        wrap_data(FlowInitErrorCode, payload, sizeof(payload));
+        oem_scale_valid = false;
+    }
+    else {
+        oem_scale_factor_ml_min = be16_u(b0, b1);
+        oem_scale_valid = true;
+    }
     
     /*Initialize the ADC that converts TS410 amplified signal, and ADC that converts low voltage signal directly from Pressure Sensor*/
     /*Initialize Pressure Transducer*/
@@ -178,9 +234,10 @@ int main(void)
         /*Start packing only after all the required data are ready to send*/
         //printf("I hate this world\r\n");
         //UART_Debug_PutString("I hate this world\r\n");
-        if(dataReady == true && pressureDataReady == true){
+        if(dataReady == true && pressureDataReady == true && oemPollDue){
             dataReady = false;
             pressureDataReady = false;
+            oemPollDue = false;
             packetsize = 0;
             uint8_t opcode = dataGood;
 
@@ -194,17 +251,17 @@ int main(void)
                 float32 ADCVolts = /*(3.3/2.739) *  */ ADC_TS410_CountsTo_Volts(ADCData[i]);
                 /*Check if data flucaute a lot, if so send warning OPCODE, currently it only checks Channel 3*/
                 if(checkData == true){
-                    if(i == ADC_NUM_CHANNELS){
+                    if(i == ADC_NUM_CHANNELS - 1){ // was "i == ADC_NUM_CHANNELS"
                         checkData = false;
                         if(savedADC!=0 && (savedADC >= ADCVolts + changeToleranceInterval || savedADC <= ADCVolts - changeToleranceInterval)){
-                            opcode = 0xF3;
+                            opcode = ADCJumpWarnCode;
                         }
                         savedADC = ADCVolts;
                     }
                 }
                 /*If ADC value is out of boundary, there might be calibration or hardware setup issue, send another warning OPCODE*/
                 if(ADCVolts > (3.3 + boundaryToleranceInterval) || ADCVolts < (0 - boundaryToleranceInterval)){
-                    opcode = unreasonableADCValueWarnCodex;
+                    opcode = ADCOORWarnCode;
                 }
                 /*Pack ADC value to the data packet that would be later sent to RPI through UART*/
                 float2Bytes(ADCVolts, &packet[packetsize]);
@@ -228,12 +285,39 @@ int main(void)
                 float32 pressureVolts = /*(3.3/3.3) */ ADC_DelSig_CountsTo_Volts(ADCPressureData[i]);
 
                 if (pressureVolts > (3.3 + boundaryToleranceInterval) || pressureVolts < (0 - boundaryToleranceInterval)){
-                    opcode = unreasonablePressureValueWarnCodex;
+                    opcode = PressureOORWarnCode;
                 }
 
                 float2Bytes(pressureVolts, &packet[packetsize]);
                 packetsize += sizeof(float32);
             }
+
+
+
+            float32 flow_ml_min = NAN, phase_deg = NAN;
+            uint8 good = 0;
+            float32  nrsaA = NAN, nrsaB = NAN, dA = NAN, dB = NAN;
+
+            bool gotF = false, gotP = false, gotA = false;
+
+            if (oem_scale_valid) {
+                gotF = OEM_ReadF(&flow_ml_min, &good);
+                gotP = OEM_ReadP(&phase_deg);
+                gotA = OEM_ReadAmp(&nrsaA, &nrsaB, &dA, &dB);
+            }
+
+            /* If anything wrong with OEM reads or signal, mark warning opcode */
+            if (!gotF || !gotP || !gotA || (good == 0)) {
+                opcode = FlowDataWarnCode;
+            }
+
+            /* Pack flow & amplitude fields into the same payload (float32 each) */
+            float2Bytes((float32)flow_ml_min, &packet[packetsize]);  packetsize += sizeof(float32);
+            float2Bytes((float32)phase_deg,   &packet[packetsize]);  packetsize += sizeof(float32);
+            float2Bytes((float32)nrsaA,       &packet[packetsize]);  packetsize += sizeof(float32);
+            float2Bytes((float32)nrsaB,       &packet[packetsize]);  packetsize += sizeof(float32);
+            float2Bytes((float32)dA,          &packet[packetsize]);  packetsize += sizeof(float32);
+            float2Bytes((float32)dB,          &packet[packetsize]);  packetsize += sizeof(float32);
 
             wrap_data(opcode, packet, packetsize);
         }
@@ -247,9 +331,75 @@ int main(void)
 
 
 
+static bool OEM_Read2(uint8_t *msb, uint8_t *lsb, uint32_t timeout_ms)
+{
+    uint32_t waited = 0;
+    while (UART_OEM_GetRxBufferSize() < 2u && waited < timeout_ms) {
+        CyDelay(1u);
+        waited++;
+    }
+    if (UART_OEM_GetRxBufferSize() < 2u) return false;
+    *msb = UART_OEM_GetChar();
+    *lsb = UART_OEM_GetChar();
+    return true;
+}
 
+static bool OEM_ReadF(float *flow_ml_min, uint8_t *good)
+{
+    uint8_t msb=0, lsb=0;
+    UART_OEM_PutChar('F');
+    if (!OEM_Read2(&msb, &lsb, OEM_TIMEOUT_MS)) return false;
 
+    uint16_t v = be16_u(msb, lsb);
+    *good   = (uint8_t)(v & 0x0001u);
 
+    /* signed 14-bit: zero bits1..0, then arithmetic >>2 */
+    int16_t raw14 = (int16_t)((int16_t)(v & 0xFFFC) >> 2);
+
+    *flow_ml_min = ((float)raw14 / 1638.0f) * (float)oem_scale_factor_ml_min;
+    return true;
+}
+
+static bool OEM_ReadP(float *phase_deg)
+{
+    uint8_t msb = 0, lsb = 0;
+    UART_OEM_PutChar('P');
+    if (!OEM_Read2(&msb, &lsb, OEM_TIMEOUT_MS)) return false;
+
+    uint16_t v = ((uint16_t)msb << 8) | (uint16_t)lsb;
+
+    /* signed 14-bit: zero bits1..0, then arithmetic >>2 */
+    int16_t raw14 = (int16_t)((int16_t)(v & 0xFFFC) >> 2);
+    // 0x7FFF represents a positive full-scale value of +719.912 degrees; 0x8000 represents a negative full-scale value of -720 degrees
+    *phase_deg = (float)raw14 * (720.0f / 8192.0f);
+    return true;
+}
+
+/* Read previous('B') and current('A') amplitudes; convert to % and give deltas (%) */
+static bool OEM_ReadAmp(float *nrsaA_pct, float *nrsaB_pct, float *dA_pct, float *dB_pct)
+{
+    uint8_t pmsb=0, plsb=0, cmsb=0, clsb=0;
+
+    /* 'B' = previous amplitudes (A,B) */
+    UART_OEM_PutChar('B');
+    if (!OEM_Read2(&pmsb, &plsb, OEM_TIMEOUT_MS)) return false;
+
+    /* 'A' = current amplitudes (A,B) */
+    UART_OEM_PutChar('A');
+    if (!OEM_Read2(&cmsb, &clsb, OEM_TIMEOUT_MS)) return false;
+
+    /* Each byte is NRSA% * 2; 0xFF means channel absent */
+    float prevA = (pmsb == 0xFF) ? NAN : (pmsb * 0.5f);
+    float prevB = (plsb == 0xFF) ? NAN : (plsb * 0.5f);
+    float currA = (cmsb == 0xFF) ? NAN : (cmsb * 0.5f);
+    float currB = (clsb == 0xFF) ? NAN : (clsb * 0.5f);
+
+    *nrsaA_pct = currA;
+    *nrsaB_pct = currB;
+    *dA_pct    = (isnan(currA) || isnan(prevA)) ? NAN : (currA - prevA);
+    *dB_pct    = (isnan(currB) || isnan(prevB)) ? NAN : (currB - prevB);
+    return true;
+}
 
 /**
  * @brief Populate buffer with metadata and data and start transmission
@@ -300,10 +450,6 @@ void wrap_data(uint8_t opcode, uint8_t* data, uint8_t length){
     //printf("\r\n\nopcode: %d, length: %d, crc: 0x%x\r\n", opcode, length, txBuffer[2 + length]);   
 }
 
-
-
-
-
 /**
  * @brief Helper function for main background loop converting float to uint8_t array
  * 
@@ -343,8 +489,6 @@ void u16Int2Bytes(uint16_t val, uint8_t *bytes_array) {
     // Assign bytes to input array
     memcpy(bytes_array, u.temp_array, 2);
 }
-
-
 
 /* Helper functions */
 /**

@@ -28,6 +28,7 @@ static uint8_t packet[MAX_PACKET_SIZE];
 
 
 /* Foreground-background shared variables */
+volatile static bool adcKick = false;
 volatile static bool dataReady = false;
 volatile static bool pressureDataReady = false;
 volatile static bool checkData = false;
@@ -110,23 +111,12 @@ CY_ISR (Timer_Interrupt_Handler)
     if (timerCount == ADC_SAMPLE_RATE_DIV) {
         timerCount = 0;        
         // Check conversion status without blocking
-        uint32_t conversionStatus = ADC_TS410_IsEndConversion(ADC_TS410_WAIT_FOR_RESULT);
-        if (conversionStatus) {
-            for (uint16_t i = 0; i < ADC_NUM_CHANNELS; i++) {
-                ADCData[i] = ADC_TS410_GetResult16(i);
-                CyDelay(1u); //Delay to leave enough time for ADC conversion
-            }
-            dataReady = true;            
+
+            adcKick = true;            
             // Start next conversion
             ADC_TS410_StartConvert();
-        }
-        else {
-            for (uint16_t i = 0; i < ADC_NUM_CHANNELS; i++) {
-                ADCData[i] = 0;
-            }
-            // printf("error: Conversion not finished yet!");
-            CyDelay(5u); // wait 5 ms to signal error
-        }        
+        
+       
     }
 
     if(timerCountDataCompare == dataCompareInterval){
@@ -178,23 +168,34 @@ int main(void)
         /*Start packing only after all the required data are ready to send*/
         //printf("I hate this world\r\n");
         //UART_Debug_PutString("I hate this world\r\n");
-        if(dataReady == true && pressureDataReady == true){
-            dataReady = false;
+        if(adcKick == true && pressureDataReady == true){
+            adcKick = false;
             pressureDataReady = false;
             packetsize = 0;
             uint8_t opcode = dataGood;
 
-            // Pack ADC Data (TS410)
+            // Pack ADC Data (TS410)        
+            uint32_t conversionStatus = ADC_TS410_IsEndConversion(ADC_TS410_WAIT_FOR_RESULT);
+            if (conversionStatus) {
+                for (uint8_t i = 0; i < ADC_NUM_CHANNELS; i++) {
+                    ADCData[i] = ADC_TS410_GetResult16(i);
+                    CyDelay(1u); //Delay to leave enough time for ADC conversion
+                }
+            }
+            else {
+                for (uint8_t i = 0; i < ADC_NUM_CHANNELS; i++) {
+                    ADCData[i] = -1000; // Assign an error value if conversion not finished
+                }
+            // printf("error: Conversion not finished yet!");
+                CyDelay(5u); // wait 5 ms to signal error
+            } 
+            
             for (uint8_t i = 0; i < ADC_NUM_CHANNELS; i++) {
                 /*Converting the count value read by ADC to float32 voltage*/
-                char buf_2[64];
-                int n_2 = snprintf(buf_2, sizeof(buf_2), "Original Channel %d: V=%d V\r\n", i, ADCData[i]);
-                UART_Debug_PutString(buf_2);   // or *_PutString(buf) if null-terminated
-                UART_Debug_PutString("\r\n");   // or *_PutString(buf) if null-terminated
                 float32 ADCVolts = /*(3.3/2.739) *  */ ADC_TS410_CountsTo_Volts(ADCData[i]);
                 /*Check if data flucaute a lot, if so send warning OPCODE, currently it only checks Channel 3*/
                 if(checkData == true){
-                    if(i == ADC_NUM_CHANNELS){
+                    if(i == 0){
                         checkData = false;
                         if(savedADC!=0 && (savedADC >= ADCVolts + changeToleranceInterval || savedADC <= ADCVolts - changeToleranceInterval)){
                             opcode = 0xF3;
@@ -203,31 +204,19 @@ int main(void)
                     }
                 }
                 /*If ADC value is out of boundary, there might be calibration or hardware setup issue, send another warning OPCODE*/
-                if(ADCVolts > (3.3 + boundaryToleranceInterval) || ADCVolts < (0 - boundaryToleranceInterval)){
+                if(ADCVolts > (5 + boundaryToleranceInterval) || ADCVolts < (0 - boundaryToleranceInterval)){
                     opcode = unreasonableADCValueWarnCodex;
                 }
                 /*Pack ADC value to the data packet that would be later sent to RPI through UART*/
                 float2Bytes(ADCVolts, &packet[packetsize]);
                 packetsize += sizeof(float32);
-                //printf("\r\nHoho\r\n");
-                //int n = snprintf(buf, sizeof(buf), "ch=%u value=%f\r\n", i, ADCVolts);
-                char buf[64];
-                int n = snprintf(buf, sizeof(buf), "Channel %d: V=%.3f V\r\n", i, ADCVolts);
-                UART_Debug_PutString(buf);   // or *_PutString(buf) if null-terminated
-                UART_Debug_PutString("\r\n");   // or *_PutString(buf) if null-terminated
-                //printf("ADC %d: %f, ", i, ADCVolts);
             }
-            //USBUART_1_PutString("\r\n");
 
             // Pack Pressure Transducer Data
             for (uint8_t i = 0; i < ADC_PRESSURE_CHANNELS; i++) {
-                // char buf_3[32];
-                // int n_3 = snprintf(buf_3, sizeof(buf_3), "Original Pressure Channel %d: V=%d V\r\n", i, ADCPressureData[i]);
-                // UART_Debug_PutString(buf_3);   // or *_PutString(buf) if null-terminated
-                // UART_Debug_PutString("\r\n");   // or *_PutString(buf) if null-terminated
                 float32 pressureVolts = /*(3.3/3.3) */ ADC_DelSig_CountsTo_Volts(ADCPressureData[i]);
 
-                if (pressureVolts > (3.3 + boundaryToleranceInterval) || pressureVolts < (0 - boundaryToleranceInterval)){
+                if (pressureVolts > (5 + boundaryToleranceInterval) || pressureVolts < (0 - boundaryToleranceInterval)){
                     opcode = unreasonablePressureValueWarnCodex;
                 }
 
@@ -238,10 +227,6 @@ int main(void)
             wrap_data(opcode, packet, packetsize);
         }
         
-        //USER_LED_Write(1);
-        //CyDelay(1000);
-        //USER_LED_Write(0);
-        //CyDelay(1000);
     }
 }
 
@@ -265,17 +250,17 @@ void wrap_data(uint8_t opcode, uint8_t* data, uint8_t length){
     //printf("Try to send data \r\n");
     
         // wait until SW buffer drained
-    while (UART_RPI_GetTxBufferSize() != 0u) {
+    /*while (UART_RPI_GetTxBufferSize() != 0u) {
         USER_LED_Write(1);
         CyDelay(5);
-    }
+    }*/
 
     // wait until HW FIFO empty
-    while ((UART_RPI_ReadTxStatus() & UART_RPI_TX_STS_FIFO_EMPTY) == 0u) {
+    /*while ((UART_RPI_ReadTxStatus() & UART_RPI_TX_STS_FIFO_EMPTY) == 0u) {
         
         USER_LED_Write(1);
         CyDelay(5);
-    }
+    }*/
 
     // wait until last bit shifted out on the line
     

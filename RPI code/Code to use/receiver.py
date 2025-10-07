@@ -21,8 +21,9 @@ from botocore.exceptions import NoCredentialsError
 from Crypto.Cipher import AES  # For AES decryption
 
 # Constants and Configurations
-LOG_DIRECTORY = "/home/pi5data/Desktop/ecmo/log"
-EMA_DIRECTORY = "/home/pi5data/Desktop/ecmo/EMA"
+base_dir = os.path.dirname(os.path.abspath(__file__))
+LOG_DIRECTORY = os.path.join(base_dir, "../../log")
+EMA_DIRECTORY = os.path.join(base_dir, "../../EMA")
 UART_PORT = '/dev/ttyAMA0'
 UART_BAUDRATE = 115200
 
@@ -335,7 +336,7 @@ def process_data():
     receivedCRC = UART_buffer[2 + dataLength]
 
     # Calculate CRC8
-    calculatedCRC = calculateCRC8(0xA0, dataLength, data)
+    calculatedCRC = calculateCRC8(0x0A, dataLength, data)
     # Check if the received CRC matches the calculated one
     if receivedCRC != calculatedCRC:
         print("CRC check failed.")
@@ -429,36 +430,6 @@ def process_data():
 
         log_message(log_entry)
         return
-
-    try:
-        # 1) First 6 floats (24 bytes total)
-        adc0, adc1, adc2, adc3, pressure0, pressure1 = struct.unpack('<6f', data[:24])
-
-        # # 2) Next 8 int16 (16 bytes)
-        # uart_u16 = [bytes2u16Int(data[24+i:24+i+2]) for i in range(0, 16, 2)]
-        # uart_i16 = [u16_to_i16(v) for v in uart_u16]
-
-        # 3) Build log string
-        log_entry = (
-            f"{timestamp}: "
-            f"ADC 0: {adc0:.6f}, ADC 1: {adc1:.6f}, ADC 2: {adc2:.6f}, ADC 3: {adc3:.6f}, "
-            f"Pressure 0: {pressure0:.6f}, Pressure 1: {pressure1:.6f}"
-        )
-
-        # uart_str = ", ".join(f"UART {i}: {v}" for i, v in enumerate(uart_i16))
-        # log_entry += f", {uart_str}"
-
-        if opCode == 0xF2:
-            log_entry += " | WARNING: ADC out of range."
-        elif opCode == 0xF3:
-            log_entry += " | WARNING: ADC jumping."
-        elif opCode == 0xF4:
-            log_entry += " | WARNING: Pressure out of range."
-
-        log_message(log_entry)
-    
-    except struct.error as e:
-        print(f"Unpack error: {e}.")
 
 
 last_receive_time = time.time()

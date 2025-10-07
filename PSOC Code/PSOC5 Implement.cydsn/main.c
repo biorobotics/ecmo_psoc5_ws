@@ -32,6 +32,7 @@ static uint16_t oem_scale_factor_ml_min = 0u;
 static bool     oem_scale_valid = false;
 
 /* Foreground-background shared variables */
+volatile static bool adcKick = false;
 volatile static bool dataReady = false;
 volatile static bool pressureDataReady = false;
 volatile static bool oemPollDue = false;
@@ -53,14 +54,15 @@ static volatile uint16_t oemPollCtr = 0;
 static uint8_t RPI_TX_Buffer[MAX_PACKET_SIZE + 3];
 static uint8_t packet[MAX_PACKET_SIZE];
 
-static const uint8_t dataGood  =  0x0A;
-static const uint8_t testSuccess = 0x0B;
-static const uint8_t EncryptionErrorCode = 0xF1;
-static const uint8_t ADCOORWarnCode = 0xF2;
-static const uint8_t ADCJumpWarnCode = 0xF3;
-static const uint8_t PressureOORWarnCode = 0xF4;
-static const uint8_t FlowInitErrorCode = 0xF5;
-static const uint8_t FlowDataWarnCode = 0xF6;
+static const uint8_t crcPolynomial  = 0x0A;
+static const uint8_t dataGood  =  0x00;
+static const uint8_t testSuccess = 0x01;
+static const uint8_t EncryptionErrorCode = 0x02;
+static const uint8_t ADCOORWarnCode = 0x04;
+static const uint8_t ADCJumpWarnCode = 0x08;
+static const uint8_t PressureOORWarnCode = 0x10;
+static const uint8_t FlowInitErrorCode = 0x20;
+static const uint8_t FlowDataWarnCode = 0x40;
 static const uint32_t dataCompareInterval = 500;
 
 
@@ -99,7 +101,7 @@ void wrap_data(uint8_t opcode, uint8_t* data, uint8_t length);
 void float2Bytes(float32 val, uint8_t *bytes_array);
 void u16Int2Bytes(uint16_t val, uint8_t *bytes_array);
 
-uint8_t calculateCRC8(uint8_t opCode, uint8_t dataLength, uint8_t* data);
+uint8_t calculateCRC8(uint8_t crcPolynomial, uint8_t dataLength, uint8_t* data);
 
 
 
@@ -124,21 +126,9 @@ CY_ISR (Timer_Interrupt_Handler)
     if (timerCount == ADC_SAMPLE_RATE_DIV) {
         timerCount = 0;        
         // Check conversion status without blocking
-        uint32_t conversionStatus = ADC_TS410_IsEndConversion(ADC_TS410_WAIT_FOR_RESULT);
-        if (conversionStatus) {
-            for (uint16_t i = 0; i < ADC_NUM_CHANNELS; i++) {
-                ADCData[i] = ADC_TS410_GetResult16(i);
-                CyDelay(1u); // Should not delay in ISR
-            }
-            dataReady = true;            
-            // Start next conversion
-            ADC_TS410_StartConvert();
-        }
-        else {
-            for (uint16_t i = 0; i < ADC_NUM_CHANNELS; i++) {
-                ADCData[i] = 0;
-            }
-        }        
+        adcKick = true;            
+        // Start next conversion
+        ADC_TS410_StartConvert();    
     }
 
     if(timerCountDataCompare == dataCompareInterval){
@@ -234,58 +224,54 @@ int main(void)
         /*Start packing only after all the required data are ready to send*/
         //printf("I hate this world\r\n");
         //UART_Debug_PutString("I hate this world\r\n");
-        if(dataReady == true && pressureDataReady == true && oemPollDue){
-            dataReady = false;
+        if(adcKick == true && pressureDataReady == true && oemPollDue){
+            adcKick = false;
             pressureDataReady = false;
             oemPollDue = false;
             packetsize = 0;
             uint8_t opcode = dataGood;
 
+
+            uint32_t conversionStatus = ADC_TS410_IsEndConversion(ADC_TS410_WAIT_FOR_RESULT);
+            if (conversionStatus) {
+                for (uint16_t i = 0; i < ADC_NUM_CHANNELS; i++) {
+                    ADCData[i] = ADC_TS410_GetResult16(i);
+                    CyDelay(1u); // Should not delay in ISR
+                }
+            }
+            else {
+                for (uint16_t i = 0; i < ADC_NUM_CHANNELS; i++) {
+                    ADCData[i] = -1000;
+                }
+            }    
             // Pack ADC Data (TS410)
             for (uint8_t i = 0; i < ADC_NUM_CHANNELS; i++) {
-                /*Converting the count value read by ADC to float32 voltage*/
-                char buf_2[64];
-                int n_2 = snprintf(buf_2, sizeof(buf_2), "Original Channel %d: V=%d V\r\n", i, ADCData[i]);
-                UART_Debug_PutString(buf_2);   // or *_PutString(buf) if null-terminated
-                UART_Debug_PutString("\r\n");   // or *_PutString(buf) if null-terminated
                 float32 ADCVolts = /*(3.3/2.739) *  */ ADC_TS410_CountsTo_Volts(ADCData[i]);
                 /*Check if data flucaute a lot, if so send warning OPCODE, currently it only checks Channel 3*/
                 if(checkData == true){
                     if(i == ADC_NUM_CHANNELS - 1){ // was "i == ADC_NUM_CHANNELS"
                         checkData = false;
                         if(savedADC!=0 && (savedADC >= ADCVolts + changeToleranceInterval || savedADC <= ADCVolts - changeToleranceInterval)){
-                            opcode = ADCJumpWarnCode;
+                            opcode |= ADCJumpWarnCode;
                         }
                         savedADC = ADCVolts;
                     }
                 }
                 /*If ADC value is out of boundary, there might be calibration or hardware setup issue, send another warning OPCODE*/
-                if(ADCVolts > (3.3 + boundaryToleranceInterval) || ADCVolts < (0 - boundaryToleranceInterval)){
-                    opcode = ADCOORWarnCode;
+                if(ADCVolts > (5 + boundaryToleranceInterval) || ADCVolts < (0 - boundaryToleranceInterval)){
+                    opcode |= ADCOORWarnCode;
                 }
                 /*Pack ADC value to the data packet that would be later sent to RPI through UART*/
                 float2Bytes(ADCVolts, &packet[packetsize]);
                 packetsize += sizeof(float32);
-                //printf("\r\nHoho\r\n");
-                //int n = snprintf(buf, sizeof(buf), "ch=%u value=%f\r\n", i, ADCVolts);
-                char buf[64];
-                int n = snprintf(buf, sizeof(buf), "Channel %d: V=%.3f V\r\n", i, ADCVolts);
-                UART_Debug_PutString(buf);   // or *_PutString(buf) if null-terminated
-                UART_Debug_PutString("\r\n");   // or *_PutString(buf) if null-terminated
-                //printf("ADC %d: %f, ", i, ADCVolts);
             }
-            //USBUART_1_PutString("\r\n");
 
             // Pack Pressure Transducer Data
             for (uint8_t i = 0; i < ADC_PRESSURE_CHANNELS; i++) {
-                // char buf_3[32];
-                // int n_3 = snprintf(buf_3, sizeof(buf_3), "Original Pressure Channel %d: V=%d V\r\n", i, ADCPressureData[i]);
-                // UART_Debug_PutString(buf_3);   // or *_PutString(buf) if null-terminated
-                // UART_Debug_PutString("\r\n");   // or *_PutString(buf) if null-terminated
                 float32 pressureVolts = /*(3.3/3.3) */ ADC_DelSig_CountsTo_Volts(ADCPressureData[i]);
 
-                if (pressureVolts > (3.3 + boundaryToleranceInterval) || pressureVolts < (0 - boundaryToleranceInterval)){
-                    opcode = PressureOORWarnCode;
+                if (pressureVolts > (5 + boundaryToleranceInterval) || pressureVolts < (0 - boundaryToleranceInterval)){
+                    opcode |= PressureOORWarnCode;
                 }
 
                 float2Bytes(pressureVolts, &packet[packetsize]);
@@ -308,7 +294,7 @@ int main(void)
 
             /* If anything wrong with OEM reads or signal, mark warning opcode */
             if (!gotF || !gotP || !gotA || (good == 0)) {
-                opcode = FlowDataWarnCode;
+                opcode |= FlowDataWarnCode;
             }
 
             /* Pack flow & amplitude fields into the same payload (float32 each) */
@@ -321,11 +307,6 @@ int main(void)
 
             wrap_data(opcode, packet, packetsize);
         }
-        
-        //USER_LED_Write(1);
-        //CyDelay(1000);
-        //USER_LED_Write(0);
-        //CyDelay(1000);
     }
 }
 
@@ -412,20 +393,18 @@ static bool OEM_ReadAmp(float *nrsaA_pct, float *nrsaB_pct, float *dA_pct, float
 */
 void wrap_data(uint8_t opcode, uint8_t* data, uint8_t length){
         // Ensure previous transmission is not ongoing before modifying transmit buffer
-    //printf("Try to send data \r\n");
-    
         // wait until SW buffer drained
-    while (UART_RPI_GetTxBufferSize() != 0u) {
+    /*while (UART_RPI_GetTxBufferSize() != 0u) {
         USER_LED_Write(1);
         CyDelay(5);
-    }
+    }*/
 
     // wait until HW FIFO empty
-    while ((UART_RPI_ReadTxStatus() & UART_RPI_TX_STS_FIFO_EMPTY) == 0u) {
+    /*while ((UART_RPI_ReadTxStatus() & UART_RPI_TX_STS_FIFO_EMPTY) == 0u) {
         
         USER_LED_Write(1);
         CyDelay(5);
-    }
+    }*/
 
     // wait until last bit shifted out on the line
     
@@ -439,7 +418,7 @@ void wrap_data(uint8_t opcode, uint8_t* data, uint8_t length){
     RPI_TX_Buffer[0] = opcode;
     RPI_TX_Buffer[1] = length;
     memcpy(&RPI_TX_Buffer[2], data, length);
-    RPI_TX_Buffer[2 + length] = calculateCRC8(opcode, length, data);
+    RPI_TX_Buffer[2 + length] = calculateCRC8(crcPolynomial, length, data);
     USER_LED_Write(0);   // drive high -> LED OFF
     UART_RPI_PutArray(RPI_TX_Buffer, 2 + length + 1);
     
@@ -501,12 +480,12 @@ void u16Int2Bytes(uint16_t val, uint8_t *bytes_array) {
  * @return uint8_t - calculated CRC byte from input parameters
  * @note Helper function for wrap_data()
 */
-uint8_t calculateCRC8(uint8_t opCode, uint8_t dataLength, uint8_t* data) {
+uint8_t calculateCRC8(uint8_t crcPolynomial, uint8_t dataLength, uint8_t* data) {
   uint8_t crc = 0x00; // Initialize CRC value
 
   // Update CRC with the opcode
-  crc = crcTable[crc ^ opCode];
-  
+  crc = crcTable[crc ^ crcPolynomial];
+
   // Update CRC with the data length
   crc = crcTable[crc ^ dataLength];
   

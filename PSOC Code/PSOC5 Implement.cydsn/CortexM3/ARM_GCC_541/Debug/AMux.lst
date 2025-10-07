@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
+ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccBUuOr3.s 			page 1
 
 
    1              		.syntax unified
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
   28:Generated_Source\PSoC5/AMux.c **** *
   29:Generated_Source\PSoC5/AMux.c **** * Parameters:
   30:Generated_Source\PSoC5/AMux.c **** *  void
-ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 2
+ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccBUuOr3.s 			page 2
 
 
   31:Generated_Source\PSoC5/AMux.c **** *
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
   60 001a FF22     		movs	r2, #255
   61 001c 014B     		ldr	r3, .L5
   62 001e 1A70     		strb	r2, [r3]
-ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 3
+ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccBUuOr3.s 			page 3
 
 
   63 0020 10BD     		pop	{r4, pc}
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
   88:Generated_Source\PSoC5/AMux.c **** *  channel:  The channel to connect to the common terminal.
   89:Generated_Source\PSoC5/AMux.c **** *
   90:Generated_Source\PSoC5/AMux.c **** * Return:
-ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 4
+ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccBUuOr3.s 			page 4
 
 
   91:Generated_Source\PSoC5/AMux.c **** *  void
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
   92              	.LVL8:
  133:Generated_Source\PSoC5/AMux.c ****     AMux_CYAMUXSIDE_B_Set(channel);
   93              		.loc 1 133 0
-ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 5
+ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccBUuOr3.s 			page 5
 
 
   94 0008 2046     		mov	r0, r4
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
  144              	.LFB4:
  134:Generated_Source\PSoC5/AMux.c **** }
  135:Generated_Source\PSoC5/AMux.c **** #endif
-ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 6
+ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccBUuOr3.s 			page 6
 
 
  136:Generated_Source\PSoC5/AMux.c **** 
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
  179 0000 10B5     		push	{r4, lr}
  180              		.cfi_def_cfa_offset 8
  181              		.cfi_offset 4, -8
-ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 7
+ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccBUuOr3.s 			page 7
 
 
  182              		.cfi_offset 14, -4
@@ -414,11 +414,11 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
  227 0006 00000000 		.4byte	.Ldebug_abbrev0
  228 000a 04       		.byte	0x4
  229 000b 01       		.uleb128 0x1
- 230 000c 6B000000 		.4byte	.LASF24
+ 230 000c 1C000000 		.4byte	.LASF24
  231 0010 0C       		.byte	0xc
- 232 0011 F4010000 		.4byte	.LASF25
- 233 0015 00000000 		.4byte	.LASF26
-ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 8
+ 232 0011 EA010000 		.4byte	.LASF25
+ 233 0015 6C010000 		.4byte	.LASF26
+ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccBUuOr3.s 			page 8
 
 
  234 0019 00000000 		.4byte	.Ldebug_ranges0+0
@@ -427,35 +427,35 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
  237 0025 02       		.uleb128 0x2
  238 0026 01       		.byte	0x1
  239 0027 06       		.byte	0x6
- 240 0028 28020000 		.4byte	.LASF0
+ 240 0028 1E020000 		.4byte	.LASF0
  241 002c 02       		.uleb128 0x2
  242 002d 01       		.byte	0x1
  243 002e 08       		.byte	0x8
- 244 002f 5D000000 		.4byte	.LASF1
+ 244 002f 0E000000 		.4byte	.LASF1
  245 0033 02       		.uleb128 0x2
  246 0034 02       		.byte	0x2
  247 0035 05       		.byte	0x5
- 248 0036 E4010000 		.4byte	.LASF2
+ 248 0036 DA010000 		.4byte	.LASF2
  249 003a 02       		.uleb128 0x2
  250 003b 02       		.byte	0x2
  251 003c 07       		.byte	0x7
- 252 003d 16010000 		.4byte	.LASF3
+ 252 003d C7000000 		.4byte	.LASF3
  253 0041 02       		.uleb128 0x2
  254 0042 04       		.byte	0x4
  255 0043 05       		.byte	0x5
- 256 0044 12020000 		.4byte	.LASF4
+ 256 0044 08020000 		.4byte	.LASF4
  257 0048 02       		.uleb128 0x2
  258 0049 04       		.byte	0x4
  259 004a 07       		.byte	0x7
- 260 004b 04010000 		.4byte	.LASF5
+ 260 004b B5000000 		.4byte	.LASF5
  261 004f 02       		.uleb128 0x2
  262 0050 08       		.byte	0x8
  263 0051 05       		.byte	0x5
- 264 0052 BB010000 		.4byte	.LASF6
+ 264 0052 B1010000 		.4byte	.LASF6
  265 0056 02       		.uleb128 0x2
  266 0057 08       		.byte	0x8
  267 0058 07       		.byte	0x7
- 268 0059 77010000 		.4byte	.LASF7
+ 268 0059 28010000 		.4byte	.LASF7
  269 005d 03       		.uleb128 0x3
  270 005e 04       		.byte	0x4
  271 005f 05       		.byte	0x5
@@ -463,29 +463,29 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
  273 0064 02       		.uleb128 0x2
  274 0065 04       		.byte	0x4
  275 0066 07       		.byte	0x7
- 276 0067 6A010000 		.4byte	.LASF8
+ 276 0067 1B010000 		.4byte	.LASF8
  277 006b 04       		.uleb128 0x4
- 278 006c EE010000 		.4byte	.LASF27
+ 278 006c E4010000 		.4byte	.LASF27
  279 0070 03       		.byte	0x3
  280 0071 E801     		.2byte	0x1e8
  281 0073 2C000000 		.4byte	0x2c
  282 0077 02       		.uleb128 0x2
  283 0078 04       		.byte	0x4
  284 0079 04       		.byte	0x4
- 285 007a 57000000 		.4byte	.LASF9
+ 285 007a 08000000 		.4byte	.LASF9
  286 007e 02       		.uleb128 0x2
  287 007f 08       		.byte	0x8
  288 0080 04       		.byte	0x4
- 289 0081 41010000 		.4byte	.LASF10
+ 289 0081 F2000000 		.4byte	.LASF10
  290 0085 02       		.uleb128 0x2
-ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 9
+ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccBUuOr3.s 			page 9
 
 
  291 0086 01       		.byte	0x1
  292 0087 08       		.byte	0x8
- 293 0088 C9010000 		.4byte	.LASF11
+ 293 0088 BF010000 		.4byte	.LASF11
  294 008c 05       		.uleb128 0x5
- 295 008d F9000000 		.4byte	.LASF12
+ 295 008d AA000000 		.4byte	.LASF12
  296 0091 01       		.byte	0x1
  297 0092 24       		.byte	0x24
  298 0093 00000000 		.4byte	.LFB0
@@ -494,7 +494,7 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
  301 009c 9C       		.byte	0x9c
  302 009d D5000000 		.4byte	0xd5
  303 00a1 06       		.uleb128 0x6
- 304 00a2 B6010000 		.4byte	.LASF18
+ 304 00a2 67010000 		.4byte	.LASF18
  305 00a6 01       		.byte	0x1
  306 00a7 26       		.byte	0x26
  307 00a8 6B000000 		.4byte	0x6b
@@ -522,7 +522,7 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
  329 00d3 00       		.byte	0
  330 00d4 00       		.byte	0
  331 00d5 05       		.uleb128 0x5
- 332 00d6 1B020000 		.4byte	.LASF13
+ 332 00d6 11020000 		.4byte	.LASF13
  333 00da 01       		.byte	0x1
  334 00db 82       		.byte	0x82
  335 00dc 00000000 		.4byte	.LFB3
@@ -531,14 +531,14 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
  338 00e5 9C       		.byte	0x9c
  339 00e6 1E010000 		.4byte	0x11e
  340 00ea 0A       		.uleb128 0xa
- 341 00eb 4F000000 		.4byte	.LASF15
+ 341 00eb 00000000 		.4byte	.LASF15
  342 00ef 01       		.byte	0x1
  343 00f0 82       		.byte	0x82
  344 00f1 6B000000 		.4byte	0x6b
  345 00f5 2A000000 		.4byte	.LLST1
  346 00f9 07       		.uleb128 0x7
  347 00fa 08000000 		.4byte	.LVL8
-ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 10
+ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccBUuOr3.s 			page 10
 
 
  348 00fe 1E020000 		.4byte	0x21e
@@ -562,7 +562,7 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
  366 011c 00       		.byte	0
  367 011d 00       		.byte	0
  368 011e 05       		.uleb128 0x5
- 369 011f 48010000 		.4byte	.LASF14
+ 369 011f F9000000 		.4byte	.LASF14
  370 0123 01       		.byte	0x1
  371 0124 45       		.byte	0x45
  372 0125 00000000 		.4byte	.LFB1
@@ -571,7 +571,7 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
  375 012e 9C       		.byte	0x9c
  376 012f 5C010000 		.4byte	0x15c
  377 0133 0A       		.uleb128 0xa
- 378 0134 4F000000 		.4byte	.LASF15
+ 378 0134 00000000 		.4byte	.LASF15
  379 0138 01       		.byte	0x1
  380 0139 45       		.byte	0x45
  381 013a 6B000000 		.4byte	0x6b
@@ -591,19 +591,19 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
  395 015a 00       		.byte	0
  396 015b 00       		.byte	0
  397 015c 05       		.uleb128 0x5
- 398 015d 45020000 		.4byte	.LASF16
+ 398 015d 3B020000 		.4byte	.LASF16
  399 0161 01       		.byte	0x1
  400 0162 97       		.byte	0x97
  401 0163 00000000 		.4byte	.LFB4
  402 0167 10000000 		.4byte	.LFE4-.LFB4
  403 016b 01       		.uleb128 0x1
  404 016c 9C       		.byte	0x9c
-ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 11
+ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccBUuOr3.s 			page 11
 
 
  405 016d A5010000 		.4byte	0x1a5
  406 0171 0A       		.uleb128 0xa
- 407 0172 4F000000 		.4byte	.LASF15
+ 407 0172 00000000 		.4byte	.LASF15
  408 0176 01       		.byte	0x1
  409 0177 97       		.byte	0x97
  410 0178 6B000000 		.4byte	0x6b
@@ -631,7 +631,7 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
  432 01a3 00       		.byte	0
  433 01a4 00       		.byte	0
  434 01a5 05       		.uleb128 0x5
- 435 01a6 8E010000 		.4byte	.LASF17
+ 435 01a6 3F010000 		.4byte	.LASF17
  436 01aa 01       		.byte	0x1
  437 01ab 5E       		.byte	0x5e
  438 01ac 00000000 		.4byte	.LFB2
@@ -640,7 +640,7 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
  441 01b5 9C       		.byte	0x9c
  442 01b6 F7010000 		.4byte	0x1f7
  443 01ba 0A       		.uleb128 0xa
- 444 01bb 4F000000 		.4byte	.LASF15
+ 444 01bb 00000000 		.4byte	.LASF15
  445 01bf 01       		.byte	0x1
  446 01c0 5E       		.byte	0x5e
  447 01c1 6B000000 		.4byte	0x6b
@@ -658,7 +658,7 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
  459 01e2 02       		.uleb128 0x2
  460 01e3 74       		.byte	0x74
  461 01e4 00       		.sleb128 0
-ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 12
+ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccBUuOr3.s 			page 12
 
 
  462 01e5 00       		.byte	0
@@ -674,7 +674,7 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
  472 01f5 00       		.byte	0
  473 01f6 00       		.byte	0
  474 01f7 0C       		.uleb128 0xc
- 475 01f8 34020000 		.4byte	.LASF19
+ 475 01f8 2A020000 		.4byte	.LASF19
  476 01fc 01       		.byte	0x1
  477 01fd 14       		.byte	0x14
  478 01fe 6B000000 		.4byte	0x6b
@@ -682,23 +682,23 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
  480 0203 03       		.byte	0x3
  481 0204 00000000 		.4byte	AMux_lastChannel
  482 0208 0D       		.uleb128 0xd
- 483 0209 9E010000 		.4byte	.LASF20
- 484 020d 9E010000 		.4byte	.LASF20
+ 483 0209 4F010000 		.4byte	.LASF20
+ 484 020d 4F010000 		.4byte	.LASF20
  485 0211 02       		.byte	0x2
  486 0212 1B       		.byte	0x1b
  487 0213 0D       		.uleb128 0xd
- 488 0214 29010000 		.4byte	.LASF21
- 489 0218 29010000 		.4byte	.LASF21
+ 488 0214 DA000000 		.4byte	.LASF21
+ 489 0218 DA000000 		.4byte	.LASF21
  490 021c 02       		.byte	0x2
  491 021d 25       		.byte	0x25
  492 021e 0D       		.uleb128 0xd
- 493 021f 54010000 		.4byte	.LASF22
- 494 0223 54010000 		.4byte	.LASF22
+ 493 021f 05010000 		.4byte	.LASF22
+ 494 0223 05010000 		.4byte	.LASF22
  495 0227 02       		.byte	0x2
  496 0228 1A       		.byte	0x1a
  497 0229 0D       		.uleb128 0xd
- 498 022a CE010000 		.4byte	.LASF23
- 499 022e CE010000 		.4byte	.LASF23
+ 498 022a C4010000 		.4byte	.LASF23
+ 499 022e C4010000 		.4byte	.LASF23
  500 0232 02       		.byte	0x2
  501 0233 24       		.byte	0x24
  502 0234 00       		.byte	0
@@ -718,7 +718,7 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
  516 000b 55       		.uleb128 0x55
  517 000c 17       		.uleb128 0x17
  518 000d 11       		.uleb128 0x11
-ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 13
+ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccBUuOr3.s 			page 13
 
 
  519 000e 01       		.uleb128 0x1
@@ -778,7 +778,7 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
  573 0044 01       		.uleb128 0x1
  574 0045 12       		.uleb128 0x12
  575 0046 06       		.uleb128 0x6
-ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 14
+ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccBUuOr3.s 			page 14
 
 
  576 0047 40       		.uleb128 0x40
@@ -838,7 +838,7 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
  630 0085 00       		.byte	0
  631 0086 03       		.uleb128 0x3
  632 0087 0E       		.uleb128 0xe
-ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 15
+ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccBUuOr3.s 			page 15
 
 
  633 0088 3A       		.uleb128 0x3a
@@ -898,7 +898,7 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
  687              	.LLST0:
  688 0000 02000000 		.4byte	.LVL0
  689 0004 06000000 		.4byte	.LVL1
-ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 16
+ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccBUuOr3.s 			page 16
 
 
  690 0008 0200     		.2byte	0x2
@@ -958,7 +958,7 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
  744 0089 00000000 		.4byte	0
  745              	.LLST4:
  746 008d 00000000 		.4byte	.LVL16
-ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 17
+ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccBUuOr3.s 			page 17
 
 
  747 0091 08000000 		.4byte	.LVL17
@@ -1014,161 +1014,161 @@ ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 1
  795      00000201 
  795      FB0E0D00 
  795      01010101 
- 796              	.LASF26:
- 797 0000 433A5C55 		.ascii	"C:\\Users\\haoen\\Desktop\\Work\\ECMO\\ecmo_psoc5_w"
- 797      73657273 
- 797      5C68616F 
-ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 18
+ 796              	.LASF15:
+ 797 0000 6368616E 		.ascii	"channel\000"
+ 797      6E656C00 
+ 798              	.LASF9:
+ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccBUuOr3.s 			page 18
 
 
- 797      656E5C44 
- 797      65736B74 
- 798 002d 735C5053 		.ascii	"s\\PSOC Code\\PSOC5 Implement.cydsn\000"
- 798      4F432043 
- 798      6F64655C 
- 798      50534F43 
- 798      3520496D 
- 799              	.LASF15:
- 800 004f 6368616E 		.ascii	"channel\000"
- 800      6E656C00 
- 801              	.LASF9:
- 802 0057 666C6F61 		.ascii	"float\000"
- 802      7400
- 803              	.LASF1:
- 804 005d 756E7369 		.ascii	"unsigned char\000"
- 804      676E6564 
- 804      20636861 
- 804      7200
- 805              	.LASF24:
- 806 006b 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
- 806      43313120 
- 806      352E342E 
- 806      31203230 
- 806      31363036 
- 807 009e 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
- 807      20726576 
- 807      6973696F 
- 807      6E203233 
- 807      37373135 
- 808 00d1 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
- 808      66756E63 
- 808      74696F6E 
- 808      2D736563 
- 808      74696F6E 
- 809              	.LASF12:
- 810 00f9 414D7578 		.ascii	"AMux_Start\000"
- 810      5F537461 
- 810      727400
- 811              	.LASF5:
- 812 0104 6C6F6E67 		.ascii	"long unsigned int\000"
- 812      20756E73 
- 812      69676E65 
- 812      6420696E 
- 812      7400
- 813              	.LASF3:
- 814 0116 73686F72 		.ascii	"short unsigned int\000"
- 814      7420756E 
- 814      7369676E 
- 814      65642069 
- 814      6E7400
- 815              	.LASF21:
- 816 0129 414D7578 		.ascii	"AMux_CYAMUXSIDE_B_Unset\000"
- 816      5F435941 
- 816      4D555853 
- 816      4944455F 
- 816      425F556E 
- 817              	.LASF10:
-ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 19
+ 799 0008 666C6F61 		.ascii	"float\000"
+ 799      7400
+ 800              	.LASF1:
+ 801 000e 756E7369 		.ascii	"unsigned char\000"
+ 801      676E6564 
+ 801      20636861 
+ 801      7200
+ 802              	.LASF24:
+ 803 001c 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 803      43313120 
+ 803      352E342E 
+ 803      31203230 
+ 803      31363036 
+ 804 004f 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 804      20726576 
+ 804      6973696F 
+ 804      6E203233 
+ 804      37373135 
+ 805 0082 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 805      66756E63 
+ 805      74696F6E 
+ 805      2D736563 
+ 805      74696F6E 
+ 806              	.LASF12:
+ 807 00aa 414D7578 		.ascii	"AMux_Start\000"
+ 807      5F537461 
+ 807      727400
+ 808              	.LASF5:
+ 809 00b5 6C6F6E67 		.ascii	"long unsigned int\000"
+ 809      20756E73 
+ 809      69676E65 
+ 809      6420696E 
+ 809      7400
+ 810              	.LASF3:
+ 811 00c7 73686F72 		.ascii	"short unsigned int\000"
+ 811      7420756E 
+ 811      7369676E 
+ 811      65642069 
+ 811      6E7400
+ 812              	.LASF21:
+ 813 00da 414D7578 		.ascii	"AMux_CYAMUXSIDE_B_Unset\000"
+ 813      5F435941 
+ 813      4D555853 
+ 813      4944455F 
+ 813      425F556E 
+ 814              	.LASF10:
+ 815 00f2 646F7562 		.ascii	"double\000"
+ 815      6C6500
+ 816              	.LASF14:
+ 817 00f9 414D7578 		.ascii	"AMux_Select\000"
+ 817      5F53656C 
+ 817      65637400 
+ 818              	.LASF22:
+ 819 0105 414D7578 		.ascii	"AMux_CYAMUXSIDE_A_Set\000"
+ 819      5F435941 
+ 819      4D555853 
+ 819      4944455F 
+ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccBUuOr3.s 			page 19
 
 
- 818 0141 646F7562 		.ascii	"double\000"
- 818      6C6500
- 819              	.LASF14:
- 820 0148 414D7578 		.ascii	"AMux_Select\000"
- 820      5F53656C 
- 820      65637400 
- 821              	.LASF22:
- 822 0154 414D7578 		.ascii	"AMux_CYAMUXSIDE_A_Set\000"
- 822      5F435941 
- 822      4D555853 
- 822      4944455F 
- 822      415F5365 
- 823              	.LASF8:
- 824 016a 756E7369 		.ascii	"unsigned int\000"
- 824      676E6564 
- 824      20696E74 
- 824      00
- 825              	.LASF7:
- 826 0177 6C6F6E67 		.ascii	"long long unsigned int\000"
- 826      206C6F6E 
- 826      6720756E 
- 826      7369676E 
- 826      65642069 
- 827              	.LASF17:
- 828 018e 414D7578 		.ascii	"AMux_FastSelect\000"
- 828      5F466173 
- 828      7453656C 
- 828      65637400 
- 829              	.LASF20:
- 830 019e 414D7578 		.ascii	"AMux_CYAMUXSIDE_A_Unset\000"
- 830      5F435941 
- 830      4D555853 
- 830      4944455F 
- 830      415F556E 
- 831              	.LASF18:
- 832 01b6 6368616E 		.ascii	"chan\000"
- 832      00
+ 819      415F5365 
+ 820              	.LASF8:
+ 821 011b 756E7369 		.ascii	"unsigned int\000"
+ 821      676E6564 
+ 821      20696E74 
+ 821      00
+ 822              	.LASF7:
+ 823 0128 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 823      206C6F6E 
+ 823      6720756E 
+ 823      7369676E 
+ 823      65642069 
+ 824              	.LASF17:
+ 825 013f 414D7578 		.ascii	"AMux_FastSelect\000"
+ 825      5F466173 
+ 825      7453656C 
+ 825      65637400 
+ 826              	.LASF20:
+ 827 014f 414D7578 		.ascii	"AMux_CYAMUXSIDE_A_Unset\000"
+ 827      5F435941 
+ 827      4D555853 
+ 827      4944455F 
+ 827      415F556E 
+ 828              	.LASF18:
+ 829 0167 6368616E 		.ascii	"chan\000"
+ 829      00
+ 830              	.LASF26:
+ 831 016c 433A5C55 		.ascii	"C:\\Users\\haoen\\Desktop\\ecmo_psoc5_ws\\PSOC Code"
+ 831      73657273 
+ 831      5C68616F 
+ 831      656E5C44 
+ 831      65736B74 
+ 832 019a 5C50534F 		.ascii	"\\PSOC5 Implement.cydsn\000"
+ 832      43352049 
+ 832      6D706C65 
+ 832      6D656E74 
+ 832      2E637964 
  833              	.LASF6:
- 834 01bb 6C6F6E67 		.ascii	"long long int\000"
+ 834 01b1 6C6F6E67 		.ascii	"long long int\000"
  834      206C6F6E 
  834      6720696E 
  834      7400
  835              	.LASF11:
- 836 01c9 63686172 		.ascii	"char\000"
+ 836 01bf 63686172 		.ascii	"char\000"
  836      00
  837              	.LASF23:
- 838 01ce 414D7578 		.ascii	"AMux_CYAMUXSIDE_B_Set\000"
+ 838 01c4 414D7578 		.ascii	"AMux_CYAMUXSIDE_B_Set\000"
  838      5F435941 
  838      4D555853 
  838      4944455F 
  838      425F5365 
  839              	.LASF2:
- 840 01e4 73686F72 		.ascii	"short int\000"
+ 840 01da 73686F72 		.ascii	"short int\000"
  840      7420696E 
  840      7400
  841              	.LASF27:
- 842 01ee 75696E74 		.ascii	"uint8\000"
-ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccKPes9d.s 			page 20
+ 842 01e4 75696E74 		.ascii	"uint8\000"
+ARM GAS  C:\Users\haoen\AppData\Local\Temp\ccBUuOr3.s 			page 20
 
 
  842      3800
  843              	.LASF25:
- 844 01f4 47656E65 		.ascii	"Generated_Source\\PSoC5\\AMux.c\000"
+ 844 01ea 47656E65 		.ascii	"Generated_Source\\PSoC5\\AMux.c\000"
  844      72617465 
  844      645F536F 
  844      75726365 
  844      5C50536F 
  845              	.LASF4:
- 846 0212 6C6F6E67 		.ascii	"long int\000"
+ 846 0208 6C6F6E67 		.ascii	"long int\000"
  846      20696E74 
  846      00
  847              	.LASF13:
- 848 021b 414D7578 		.ascii	"AMux_Connect\000"
+ 848 0211 414D7578 		.ascii	"AMux_Connect\000"
  848      5F436F6E 
  848      6E656374 
  848      00
  849              	.LASF0:
- 850 0228 7369676E 		.ascii	"signed char\000"
+ 850 021e 7369676E 		.ascii	"signed char\000"
  850      65642063 
  850      68617200 
  851              	.LASF19:
- 852 0234 414D7578 		.ascii	"AMux_lastChannel\000"
+ 852 022a 414D7578 		.ascii	"AMux_lastChannel\000"
  852      5F6C6173 
  852      74436861 
  852      6E6E656C 
  852      00
  853              	.LASF16:
- 854 0245 414D7578 		.ascii	"AMux_Disconnect\000"
+ 854 023b 414D7578 		.ascii	"AMux_Disconnect\000"
  854      5F446973 
  854      636F6E6E 
  854      65637400 

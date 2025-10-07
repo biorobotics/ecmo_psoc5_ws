@@ -32,7 +32,7 @@ static uint16_t flow_scale_factor = 0u;
 static bool     flow_scale_valid = false;
 
 /* Foreground-background shared variables */
-volatile static bool adcDataReady = false;
+volatile static bool adcKick = false;
 volatile static bool pressureDataReady = false;
 volatile static bool flowDataReady = false;
 volatile static bool checkData = false;
@@ -40,7 +40,7 @@ volatile static bool checkData = false;
 static const float32 boundaryToleranceInterval = 0.1;
 static const float32 changeToleranceInterval = 0.3;
 
-volatile static float32 savedADC = 0;
+volatile static float32 savedADC = NAN;
 volatile int16_t adcData[ADC_SAMPLES_PER_PACKET*ADC_NUM_CHANNELS];
 volatile int16_t pressureData[ADC_PRESSURE_CHANNELS];
 
@@ -56,7 +56,7 @@ static uint8_t packet[MAX_PACKET_SIZE];
 static const uint8_t crcPolynomial  = 0x0A;
 
 static const uint8_t initGood = 0b00000000;
-static const uint8_t encrytionInitError = 0b00000010;
+static const uint8_t encryptionInitError = 0b00000010;
 static const uint8_t flowInitError = 0b00000100;
 
 static const uint8_t dataGood           = 0b00000001;
@@ -129,7 +129,7 @@ CY_ISR (Timer_Interrupt_Handler)
     if (adcTimerCount == ADC_SAMPLE_RATE_DIV) {
         adcTimerCount = 0;        
         // Check conversion status without blocking
-        adcDataReady = true;            
+        adcKick = true;            
         // Start next conversion
         ADC_TS410_StartConvert();    
     }
@@ -149,7 +149,7 @@ CY_ISR (Timer_Interrupt_Handler)
     if (++div >= 100) {                     // e.g., at 1 kHz tick -> ~1 Hz blink
         div = 0;
         USER_LED_Write( (uint8)(!USER_LED_ReadDataReg()) );  // toggle
-        // If LED is active-low and you want “1 = on”, invert here as needed.
+        // If LED is active-low and you want "1 = on", invert here as needed.
     }*/
 }
 
@@ -224,8 +224,8 @@ int main(void)
         /*Start packing only after all the required data are ready to send*/
         //printf("I hate this world\r\n");
         //UART_Debug_PutString("I hate this world\r\n");
-        if(adcDataReady == true && pressureDataReady == true && flowDataReady){
-            adcDataReady = false;
+        if(adcKick == true && pressureDataReady == true && flowDataReady){
+            adcKick = false;
             pressureDataReady = false;
             flowDataReady = false;
             packetsize = 0;
@@ -236,7 +236,7 @@ int main(void)
             if (conversionStatus) {
                 for (uint16_t i = 0; i < ADC_NUM_CHANNELS; i++) {
                     adcData[i] = ADC_TS410_GetResult16(i);
-                    CyDelay(1u);
+                    CyDelay(1u); // CyDelay(1u) not needed when using IsEndConversion(WAIT_FOR_RESULT)
                 }
             }
             else {
@@ -248,14 +248,12 @@ int main(void)
             for (uint8_t i = 0; i < ADC_NUM_CHANNELS; i++) {
                 float32 ADCVolts = /*(3.3/2.739) *  */ ADC_TS410_CountsTo_Volts(adcData[i]);
                 /*Check if data flucaute a lot, if so send warning OPCODE, currently it only checks Channel 3*/
-                if(checkData == true){
-                    if(i == ADC_NUM_CHANNELS - 1){ // was "i == ADC_NUM_CHANNELS"
-                        checkData = false;
-                        if(savedADC != 0 && (savedADC >= ADCVolts + changeToleranceInterval || savedADC <= ADCVolts - changeToleranceInterval)){
-                            opcode |= ADCJumpWarn;
-                        }
-                        savedADC = ADCVolts;
+                if(checkData && i == (ADC_NUM_CHANNELS - 1)){
+                    checkData = false;
+                    if(!isnan(savedADC) && fabsf(savedADC - ADCVolts) >= changeToleranceInterval){
+                        opcode |= ADCJumpWarn;
                     }
+                    savedADC = ADCVolts;
                 }
                 /*If ADC value is out of boundary, there might be calibration or hardware setup issue, send another warning OPCODE*/
                 if(ADCVolts > (5 + boundaryToleranceInterval) || ADCVolts < (0 - boundaryToleranceInterval)){

@@ -8,6 +8,7 @@ Biorobotics Lab Project 4.2 Fall 2024
 import os
 import struct
 import time
+import math
 from datetime import datetime
 from threading import Thread
 from queue import Queue
@@ -24,12 +25,14 @@ LOG_DIRECTORY = "/home/pi5data/Desktop/ecmo/log"
 EMA_DIRECTORY = "/home/pi5data/Desktop/ecmo/EMA"
 UART_PORT = '/dev/ttyAMA0'
 UART_BAUDRATE = 115200
+
 AES_KEY = bytes([
     0xAA, 0xBB, 0xCC, 0xDD,
     0xEE, 0xFF, 0xFF, 0xEE,
     0xDD, 0xCC, 0xBB, 0xAA,
     0xAA, 0xBB, 0xCC, 0xDD
 ])
+
 S3_BUCKET = 'bio-data-fa24'  # Replace with your actual bucket name
 
 # Initialize AWS S3 client
@@ -66,6 +69,20 @@ crcTable = [
     0xDE, 0xD9, 0xD0, 0xD7, 0xC2, 0xC5, 0xCC, 0xCB, 0xE6, 0xE1, 0xE8, 0xEF,
     0xFA, 0xFD, 0xF4, 0xF3
 ]
+
+# LSB distinguishes init (0) vs data (1)
+BIT_DATA                = 0b00000001
+
+# Init-phase error bits (LSB=0)
+BIT_INIT_ENCRYPTION_ERR = 0b00000010
+BIT_INIT_FLOW_ERR       = 0b00000100
+
+# Data-phase warnings (LSB=1)
+BIT_ADC_OOR             = 0b00000010
+BIT_ADC_JUMP            = 0b00000100
+BIT_PRESS_OOR           = 0b00001000
+BIT_PRESS_JUMP          = 0b00010000   
+BIT_FLOW_WARN           = 0b00100000
 
 # Global variables
 opCode = None
@@ -138,6 +155,13 @@ def bytes2u16Int(bytes_array):
         int: The converted integer.
     """
     return struct.unpack('<H', bytes_array)[0]
+
+def fmt_f(x):
+    """Pretty float with NaN handling."""
+    return "NaN" if (x is None or not math.isfinite(x)) else f"{x:.6f}"
+
+def bytes_to_u16_le(b):
+    return int.from_bytes(b, byteorder="little", signed=False)
 
 def u16_to_i16(u):
     """Convert unsigned 16-bit to signed 16-bit."""
@@ -310,41 +334,102 @@ def process_data():
     data = UART_buffer[2:2 + dataLength]
     receivedCRC = UART_buffer[2 + dataLength]
 
-    if opCode == 0x0B:  # testSuccess: startup banner from PSoC
-        print("UART started.")
-        return
-
-    # if dataLength != 40:
-    #     print(f"Warning: Unexpected data length {dataLength}, expecting 40 (6 float32 + 8 int16).")
-    #     return
-    
-    if opCode == 0xF1:
-        print("Encryption Driver Error: PSOC looped. Please power-cycle the PSOC.")
-        return
-    
-    # print("No encryption error")
-
-    # Decrypt the received packet
-    # ******************************** #
-    # Note: for Oct 30 day sheep study, we disable Crypto
-    # ******************************** #
-    # decrypted_packet = bytearray()
-    # for i in range(0, dataLength, 16):
-    #     block = data[i:i + 16]
-    #     if len(block) < 16:
-    #         # Padding if necessary
-    #         block += bytes(16 - len(block))
-    #     decrypted_block = cipher.decrypt(bytes(block))
-    #     decrypted_packet.extend(decrypted_block[:len(block)])
-
     # Calculate CRC8
-    calculatedCRC = calculateCRC8(opCode, dataLength, data)
+    calculatedCRC = calculateCRC8(0xA0, dataLength, data)
     # Check if the received CRC matches the calculated one
     if receivedCRC != calculatedCRC:
         print("CRC check failed.")
         return
     
     timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+
+    # --- Frame kind: init (LSB=0) vs data (LSB=1) ---
+    is_data = (opCode & BIT_DATA) != 0
+
+    if not is_data:
+        # ------------------------- INIT FRAME -------------------------
+        # Currently sends 2 bytes (status or marker).
+        if dataLength != 2:
+            print(f"{timestamp}: INIT frame with unexpected payload length={dataLength}")
+            return
+
+        init_msgs = []
+        if opCode & BIT_INIT_ENCRYPTION_ERR:
+            init_msgs.append("encryption driver error")
+        if opCode & BIT_INIT_FLOW_ERR:
+            init_msgs.append("flow sensor init error")
+
+        # Decrypt the received packet
+        # ******************************** #
+        # Note: for Oct 30 day sheep study, we disable Crypto
+        # ******************************** #
+        # decrypted_packet = bytearray()
+        # for i in range(0, dataLength, 16):
+        #     block = data[i:i + 16]
+        #     if len(block) < 16:
+        #         # Padding if necessary
+        #         block += bytes(16 - len(block))
+        #     decrypted_block = cipher.decrypt(bytes(block))
+        #     decrypted_packet.extend(decrypted_block[:len(block)])
+
+        # Parse payload
+        status_u16 = bytes_to_u16_le(data[0:2]) if dataLength >= 2 else None
+
+        desc = f"{timestamp}: INIT: status=0x{status_u16:04X}" if status_u16 is not None else f"{timestamp}: INIT"
+
+        if init_msgs:
+            desc += " | " + " + ".join(init_msgs)
+        else:
+            desc += " | OK"
+
+        print(desc)
+        return
+
+    else:
+        # ------------------------- DATA FRAME -------------------------
+        # Expect 12 floats = 48 bytes (ADC4 + Pressure2 + OEM6)
+        if dataLength < 48:
+            print(f"{timestamp}: DATA frame too short (len={dataLength}, need >=48).")
+            return
+
+        try:
+            adc0, adc1, adc2, adc3, p0, p1, flow_ml_min, phase_deg, nrsaA, nrsaB, dA, dB = struct.unpack('<12f', data[:48])
+        except struct.error as e:
+            print(f"{timestamp}: Unpack error: {e}.")
+            return
+
+        # Turn NaNs into None for clean printing/logging logic, keep raw floats otherwise
+        def safe(v): return None if (not math.isfinite(v)) else v
+
+        adc_vals = list(map(safe, (adc0, adc1, adc2, adc3)))
+        pres_vals = list(map(safe, (p0, p1)))
+        flow_vals = list(map(safe, (flow_ml_min, phase_deg, nrsaA, nrsaB, dA, dB)))
+
+        # Build log line
+        log_entry = (
+            f"{timestamp}: "
+            f"BioPac0={fmt_f(adc_vals[0])}, BioPac1={fmt_f(adc_vals[1])}, "
+            f"TS410-0={fmt_f(adc_vals[2])}, TS410-1={fmt_f(adc_vals[3])}, "
+            f"Pres0={fmt_f(pres_vals[0])}, Pres1={fmt_f(pres_vals[1])}, "
+            f"Flow(mL/min)={fmt_f(flow_vals[0])}, Phase(deg)={fmt_f(flow_vals[1])}, "
+            f"NRSA_A%={fmt_f(flow_vals[2])}, NRSA_B%={fmt_f(flow_vals[3])}, "
+            f"dA%={fmt_f(flow_vals[4])}, dB%={fmt_f(flow_vals[5])}"
+        )
+
+        # Decode warning bits
+        warns = []
+        if opCode & BIT_ADC_OOR:   warns.append("ADC OOR")
+        if opCode & BIT_ADC_JUMP:  warns.append("ADC jump")
+        if opCode & BIT_PRESS_OOR: warns.append("Pressure OOR")
+        if opCode & BIT_PRESS_JUMP:warns.append("Pressure jump")
+        if opCode & BIT_FLOW_WARN: warns.append("Flow data warn")
+
+        if warns:
+            log_entry += " | WARN: " + " + ".join(warns)
+
+        log_message(log_entry)
+        return
+
     try:
         # 1) First 6 floats (24 bytes total)
         adc0, adc1, adc2, adc3, pressure0, pressure1 = struct.unpack('<6f', data[:24])

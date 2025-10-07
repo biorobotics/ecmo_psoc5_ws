@@ -167,6 +167,39 @@
 <VisibleNodeIds>
 <v>Workspace04</v>
 <v>Workspace04\PSOC5 Implement</v>
+<v>Workspace04\PSOC5 Implement\CortexM3</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\ADC_CH0.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\ADC_CH1.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\ADC_CH2.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\ADC_CH3.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\ADC_DelSig.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\ADC_DelSig_Ext_CP_Clk.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\ADC_DelSig_INT.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\ADC_DelSig_IRQ.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\ADC_DelSig_PM.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\ADC_DelSig_theACLK.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\ADC_TS410.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\ADC_TS410_FinalBuf_dma.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\ADC_TS410_INT.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\ADC_TS410_IntClock.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\ADC_TS410_IRQ.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\ADC_TS410_PM.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\ADC_TS410_SAR.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\ADC_TS410_SAR_INT.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\ADC_TS410_SAR_PM.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\ADC_TS410_TempBuf_dma.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\AMux.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\Clock_ISR.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\Cm3Start.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\cy_em_eeprom.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\CyBootAsmGnu.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\CyDmac.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\cyfitter_cfg.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\CyFlash.lst</v>
+<v>Workspace04\PSOC5 Implement\CortexM3\ARM_GCC_541\Debug\Listing Files\CyLib.lst</v>
 </VisibleNodeIds>
 </CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
 </TreeStates>

@@ -28,41 +28,44 @@
 #define OEM_POLL_DIV                    10u
 #define OEM_TIMEOUT_MS                  10u
 
-static uint16_t oem_scale_factor_ml_min = 0u;
-static bool     oem_scale_valid = false;
+static uint16_t flow_scale_factor = 0u;
+static bool     flow_scale_valid = false;
 
 /* Foreground-background shared variables */
-volatile static bool adcKick = false;
-volatile static bool dataReady = false;
+volatile static bool adcDataReady = false;
 volatile static bool pressureDataReady = false;
-volatile static bool oemPollDue = false;
+volatile static bool flowDataReady = false;
 volatile static bool checkData = false;
 
 static const float32 boundaryToleranceInterval = 0.1;
 static const float32 changeToleranceInterval = 0.3;
 
 volatile static float32 savedADC = 0;
-volatile int16_t ADCData[ADC_SAMPLES_PER_PACKET*ADC_NUM_CHANNELS];
-volatile int16_t ADCPressureData[ADC_PRESSURE_CHANNELS];
+volatile int16_t adcData[ADC_SAMPLES_PER_PACKET*ADC_NUM_CHANNELS];
+volatile int16_t pressureData[ADC_PRESSURE_CHANNELS];
 
 /* Foreground variables */
-static volatile uint16_t timerCount = 0;
+static volatile uint16_t adcTimerCount = 0;
 static volatile uint16_t timerCountDataCompare = 0;
-static volatile uint16_t oemPollCtr = 0;
+static volatile uint16_t flowTimerCount = 0;
 
 /* Background variables */
 static uint8_t RPI_TX_Buffer[MAX_PACKET_SIZE + 3];
 static uint8_t packet[MAX_PACKET_SIZE];
 
 static const uint8_t crcPolynomial  = 0x0A;
-static const uint8_t dataGood  =  0x00;
-static const uint8_t testSuccess = 0x01;
-static const uint8_t EncryptionErrorCode = 0x02;
-static const uint8_t ADCOORWarnCode = 0x04;
-static const uint8_t ADCJumpWarnCode = 0x08;
-static const uint8_t PressureOORWarnCode = 0x10;
-static const uint8_t FlowInitErrorCode = 0x20;
-static const uint8_t FlowDataWarnCode = 0x40;
+
+static const uint8_t initGood = 0b00000000;
+static const uint8_t encrytionInitError = 0b00000010;
+static const uint8_t flowInitError = 0b00000100;
+
+static const uint8_t dataGood           = 0b00000001;
+static const uint8_t ADCOORWarn         = 0b00000011;
+static const uint8_t ADCJumpWarn        = 0b00000101;
+static const uint8_t PressureOORWarn    = 0b00001001;
+static const uint8_t PressureJumpWarn   = 0b00010001;
+static const uint8_t FlowDataWarn       = 0b00100001;
+
 static const uint32_t dataCompareInterval = 500;
 
 
@@ -109,24 +112,24 @@ CY_ISR (Timer_Interrupt_Handler)
 {
     (void)Timer_ISR_ReadStatusRegister();   // clear interrupt
     
-    timerCount++;
+    adcTimerCount++;
     timerCountDataCompare++;
-    oemPollCtr++;
+    flowTimerCount++;
 
     // Read Pressure Transducer data with frequency 10 Hz
     // Note: this is offset by PRESSURE_TRANSDUCER_TIME_SHIFT to avoid ADC and Pressure Transducer read at the same time
-    if ((timerCount + PRESSURE_TRANSDUCER_TIME_SHIFT) == ADC_SAMPLE_RATE_DIV) {
+    if ((adcTimerCount + PRESSURE_TRANSDUCER_TIME_SHIFT) == ADC_SAMPLE_RATE_DIV) {
         for (uint16_t i = 0; i < ADC_PRESSURE_CHANNELS; i++) {
-            ADCPressureData[i] = read_pressure(i);
+            pressureData[i] = read_pressure(i);
         }
         pressureDataReady = true;
     }
 
     // Read ADC conversion results with frequency 10 Hz (10 us latency)
-    if (timerCount == ADC_SAMPLE_RATE_DIV) {
-        timerCount = 0;        
+    if (adcTimerCount == ADC_SAMPLE_RATE_DIV) {
+        adcTimerCount = 0;        
         // Check conversion status without blocking
-        adcKick = true;            
+        adcDataReady = true;            
         // Start next conversion
         ADC_TS410_StartConvert();    
     }
@@ -137,9 +140,9 @@ CY_ISR (Timer_Interrupt_Handler)
     }
 
     // Polling for OEM data reading
-    if (oemPollCtr >= OEM_POLL_DIV) {
-        oemPollCtr = 0;
-        oemPollDue = true;
+    if (flowTimerCount >= OEM_POLL_DIV) {
+        flowTimerCount = 0;
+        flowDataReady = true;
     }
   
     /*static uint16_t div = 0;                // divide the tick rate
@@ -159,6 +162,8 @@ int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
     uint8_t packetsize = 0;
+    uint8_t opcode = initGood;
+    uint8_t payload[2] = {0}; 
     
     /*Initialize UART from OEM to PSOC, and from PSOC to RPI-5*/
     UART_Debug_Start();
@@ -168,26 +173,20 @@ int main(void)
     UART_Debug_PutString("Hello World!\r\n");
     /*Testing the UART Connection to RPI-5*/
     
-    RPI_TX_Buffer[0] = testSuccess;
-    RPI_TX_Buffer[1] = 2;
-    UART_RPI_PutArray(RPI_TX_Buffer,5);
-    
     // Get status from the flow sensor
     while (UART_OEM_GetRxBufferSize() > 0) { (void)UART_OEM_GetChar(); }
     UART_OEM_PutChar('S');
     uint8_t b0=0, b1=0;
     bool got2 = OEM_Read2(&b0, &b1, 50u);
     if (!got2) {
-        uint8_t payload[2]; 
-        u16Int2Bytes(0xFFFFu, payload);
-        wrap_data(FlowInitErrorCode, payload, sizeof(payload));
+        opcode |= flowInitError;
+        u16Int2Bytes(0u, payload);
     }
     else {
         uint16_t status = be16_u(b0, b1);
         if (((status & 0x8000u) == 0u) || ((status & 0x0001u) == 0u)) {
-            uint8_t payload[2]; 
+            opcode |= flowInitError;
             u16Int2Bytes(status, payload);
-            wrap_data(FlowInitErrorCode, payload, sizeof(payload));
         }
     }
 
@@ -196,15 +195,16 @@ int main(void)
     UART_OEM_PutChar('C');
     got2 = OEM_Read2(&b0, &b1, 50u);
     if (!got2) {
-        uint8_t payload[2]; 
-        u16Int2Bytes(0xEEEEu, payload);
-        wrap_data(FlowInitErrorCode, payload, sizeof(payload));
-        oem_scale_valid = false;
+        opcode |= flowInitError;
+        u16Int2Bytes(0xCCCCu, payload);
+        flow_scale_valid = false;
     }
     else {
-        oem_scale_factor_ml_min = be16_u(b0, b1);
-        oem_scale_valid = true;
+        flow_scale_factor = be16_u(b0, b1);
+        flow_scale_valid = true;
     }
+
+    wrap_data(opcode, payload, sizeof(payload));
     
     /*Initialize the ADC that converts TS410 amplified signal, and ADC that converts low voltage signal directly from Pressure Sensor*/
     /*Initialize Pressure Transducer*/
@@ -224,42 +224,42 @@ int main(void)
         /*Start packing only after all the required data are ready to send*/
         //printf("I hate this world\r\n");
         //UART_Debug_PutString("I hate this world\r\n");
-        if(adcKick == true && pressureDataReady == true && oemPollDue){
-            adcKick = false;
+        if(adcDataReady == true && pressureDataReady == true && flowDataReady){
+            adcDataReady = false;
             pressureDataReady = false;
-            oemPollDue = false;
+            flowDataReady = false;
             packetsize = 0;
-            uint8_t opcode = dataGood;
+            opcode = dataGood;
 
 
             uint32_t conversionStatus = ADC_TS410_IsEndConversion(ADC_TS410_WAIT_FOR_RESULT);
             if (conversionStatus) {
                 for (uint16_t i = 0; i < ADC_NUM_CHANNELS; i++) {
-                    ADCData[i] = ADC_TS410_GetResult16(i);
-                    CyDelay(1u); // Should not delay in ISR
+                    adcData[i] = ADC_TS410_GetResult16(i);
+                    CyDelay(1u);
                 }
             }
             else {
                 for (uint16_t i = 0; i < ADC_NUM_CHANNELS; i++) {
-                    ADCData[i] = -1000;
+                    adcData[i] = -1000;
                 }
             }    
             // Pack ADC Data (TS410)
             for (uint8_t i = 0; i < ADC_NUM_CHANNELS; i++) {
-                float32 ADCVolts = /*(3.3/2.739) *  */ ADC_TS410_CountsTo_Volts(ADCData[i]);
+                float32 ADCVolts = /*(3.3/2.739) *  */ ADC_TS410_CountsTo_Volts(adcData[i]);
                 /*Check if data flucaute a lot, if so send warning OPCODE, currently it only checks Channel 3*/
                 if(checkData == true){
                     if(i == ADC_NUM_CHANNELS - 1){ // was "i == ADC_NUM_CHANNELS"
                         checkData = false;
-                        if(savedADC!=0 && (savedADC >= ADCVolts + changeToleranceInterval || savedADC <= ADCVolts - changeToleranceInterval)){
-                            opcode |= ADCJumpWarnCode;
+                        if(savedADC != 0 && (savedADC >= ADCVolts + changeToleranceInterval || savedADC <= ADCVolts - changeToleranceInterval)){
+                            opcode |= ADCJumpWarn;
                         }
                         savedADC = ADCVolts;
                     }
                 }
                 /*If ADC value is out of boundary, there might be calibration or hardware setup issue, send another warning OPCODE*/
                 if(ADCVolts > (5 + boundaryToleranceInterval) || ADCVolts < (0 - boundaryToleranceInterval)){
-                    opcode |= ADCOORWarnCode;
+                    opcode |= ADCOORWarn;
                 }
                 /*Pack ADC value to the data packet that would be later sent to RPI through UART*/
                 float2Bytes(ADCVolts, &packet[packetsize]);
@@ -268,17 +268,15 @@ int main(void)
 
             // Pack Pressure Transducer Data
             for (uint8_t i = 0; i < ADC_PRESSURE_CHANNELS; i++) {
-                float32 pressureVolts = /*(3.3/3.3) */ ADC_DelSig_CountsTo_Volts(ADCPressureData[i]);
+                float32 pressureVolts = /*(3.3/3.3) */ ADC_DelSig_CountsTo_Volts(pressureData[i]);
 
                 if (pressureVolts > (5 + boundaryToleranceInterval) || pressureVolts < (0 - boundaryToleranceInterval)){
-                    opcode |= PressureOORWarnCode;
+                    opcode |= PressureOORWarn;
                 }
 
                 float2Bytes(pressureVolts, &packet[packetsize]);
                 packetsize += sizeof(float32);
             }
-
-
 
             float32 flow_ml_min = NAN, phase_deg = NAN;
             uint8 good = 0;
@@ -286,7 +284,7 @@ int main(void)
 
             bool gotF = false, gotP = false, gotA = false;
 
-            if (oem_scale_valid) {
+            if (flow_scale_valid) {
                 gotF = OEM_ReadF(&flow_ml_min, &good);
                 gotP = OEM_ReadP(&phase_deg);
                 gotA = OEM_ReadAmp(&nrsaA, &nrsaB, &dA, &dB);
@@ -294,7 +292,7 @@ int main(void)
 
             /* If anything wrong with OEM reads or signal, mark warning opcode */
             if (!gotF || !gotP || !gotA || (good == 0)) {
-                opcode |= FlowDataWarnCode;
+                opcode |= FlowDataWarn;
             }
 
             /* Pack flow & amplitude fields into the same payload (float32 each) */
@@ -337,7 +335,7 @@ static bool OEM_ReadF(float *flow_ml_min, uint8_t *good)
     /* signed 14-bit: zero bits1..0, then arithmetic >>2 */
     int16_t raw14 = (int16_t)((int16_t)(v & 0xFFFC) >> 2);
 
-    *flow_ml_min = ((float)raw14 / 1638.0f) * (float)oem_scale_factor_ml_min;
+    *flow_ml_min = ((float)raw14 / 1638.0f) * (float)flow_scale_factor;
     return true;
 }
 

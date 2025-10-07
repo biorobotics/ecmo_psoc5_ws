@@ -1,0 +1,21 @@
+{
+    "protocol": "arduino",
+    "db_name":"2025_10_09_sheep_laser_a",
+    "prefix":"laser",
+    "log_directory":"/home/pas/Desktop/ecmo/log",
+    "sensor_port":"/dev/serial/by-id/usb-Arduino_Nano_ESP32_3C8427C303F8-if01",
+    "sensor_baudrate":115200,
+    "columns": [
+        "BOARD_TIME",
+        "L680_1",
+        "L850_1",
+        "L808_1",
+        "PULSE_A_1",
+        "PULSE_B_1",
+        "L680_2",
+        "L850_2",
+        "L808_2",
+        "PULSE_A_2",
+        "PULSE_B_2"
+    ]
+}

@@ -1,0 +1,25 @@
+{
+    "protocol": "psoc",
+    "db_name":"2025_10_09_sheep_psoc_a",
+    "prefix":"psoc_A",
+    "log_directory":"/home/pi5data/Desktop/ecmo/log",
+    "sensor_port":"/dev/ttyAMA0",
+    "sensor_baudrate":115200,
+    "columns": [
+        "OpCode",
+        "adc_0",
+        "adc_1",
+        "adc_2",
+        "adc_3",
+        "pressure_0",
+        "pressure_1",
+        "flow_0",
+        "flow_1",
+        "flow_2",
+        "flow_3",
+        "flow_4",
+        "flow_5",
+        "flow_6",
+        "flow_7"
+    ]
+}

@@ -218,7 +218,7 @@ int main(void)
     ADC_DelSig_StartConvert();
 
     Timer_ISR_Start();
-
+    USER_LED_Write(1);
     for(;;)
     {   
         /*Start packing only after all the required data are ready to send*/
@@ -414,9 +414,11 @@ void wrap_data(uint8_t opcode, uint8_t* data, uint8_t length){
     RPI_TX_Buffer[0] = opcode;
     RPI_TX_Buffer[1] = length;
     memcpy(&RPI_TX_Buffer[2], data, length);
-    RPI_TX_Buffer[2 + length] = calculateCRC8(crcPolynomial, length, data);
-    USER_LED_Write(0);   // drive high -> LED OFF
-    UART_RPI_PutArray(RPI_TX_Buffer, 2 + length + 1);
+    RPI_TX_Buffer[2 + length] = calculateCRC8(crcPolynomial, length, data);   
+    RPI_TX_Buffer[3 + length] = 0x0D;
+    RPI_TX_Buffer[4 + length] = 0x0A;
+    //USER_LED_Write(0);   // drive high -> LED OFF
+    UART_RPI_PutArray(RPI_TX_Buffer, 2 + length + 3);
     
     
     //printf("Sent data \r\n");

@@ -22,8 +22,8 @@ from Crypto.Cipher import AES  # For AES decryption
 
 # Constants and Configurations
 base_dir = os.path.dirname(os.path.abspath(__file__))
-LOG_DIRECTORY = os.path.join(base_dir, "../../log")
-EMA_DIRECTORY = os.path.join(base_dir, "../../EMA")
+LOG_DIRECTORY = os.path.join(base_dir, "../../../log")
+EMA_DIRECTORY = os.path.join(base_dir, "../../../EMA")
 UART_PORT = '/dev/ttyAMA0'
 UART_BAUDRATE = 115200
 
@@ -458,7 +458,7 @@ def UART_receive(ser):
         buffer_index += bytes_available
         last_receive_time = time.time()  # update timestamp when data is received
         # Check if we have enough data to process
-        if buffer_index > 1 and buffer_index >= UART_buffer[1] + 3:
+        if buffer_index >= UART_buffer[1] + 5:
             process_data()
             buffer_index = 0
             UART_buffer = bytearray()

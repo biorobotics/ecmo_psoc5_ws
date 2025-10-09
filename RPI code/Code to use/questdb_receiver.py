@@ -86,32 +86,48 @@ def calculateCRC8(opCode, dataLength, data):
 
     return crc
 
-class PsocProtocol(asyncio.Protocol):
-    def connection_made(self, transport):
-        self.transport = transport
-        print("Port opened", transport)
-        self.data = bytearray()
-        self.lines = []
+def process_data(indata):
+        # Init-phase error bits (LSB=0)
+        BIT_INIT_ENCRYPTION_ERR = 0b00000010
+        BIT_INIT_FLOW_ERR       = 0b00000100
 
-    def process_data(self):
-        opCode = self.data[0]
-        dataLength = self.data[1]
+        # Data-phase warnings (LSB=1)
+        BIT_ADC_OOR             = 0b00000010
+        BIT_ADC_JUMP            = 0b00000100
+        BIT_PRESS_OOR           = 0b00001000
+        BIT_PRESS_JUMP          = 0b00010000
+        BIT_FLOW_WARN           = 0b00100000
 
-        if opCode == 0x0B:  # testSuccess: startup banner from PSoC
-            print("UART started.")
+
+        opCode = indata[0]
+        dataLength = indata[1]
+
+        if dataLength == 2:
+            if opCode == 0x00:  # testSuccess: startup banner from PSoC
+                print("UART started.")
+            if opCode & BIT_INIT_ENCRYPTION_ERR:
+                print("Encryption initialization error")
+            if opCode & BIT_INIT_FLOW_ERR:
+                print("Flow initialization error")
             return
 
-        if dataLength != 40:
-            print(f"Warning: Unexpected data length {dataLength}, expecting 40 (6 float32 + 8 int16).")
-            return
-        
-        if opCode == 0xF1:
-            print("Encryption Driver Error: PSOC looped. Please power-cycle the PSOC.")
+        if dataLength != 48:
+            print(f"Warning: Unexpected data length {dataLength}, expecting 48 (12 float32).")
             return
 
+        error_codes = ""
+        for code, msg in [
+            (0b00000010, "ADC out of range"),
+            (0b00000100, "ADC jumping"),
+            (0b00001000, "Pressure sensor out of range"),
+            (0b00010000, "Pressure sensor jumping"),
+            (0b00100000, "Flow sensor error"),
+        ]:
+            if opCode & code:
+                print(f"{msg}|")
 
-        data = self.data[2:2 + dataLength]
-        receivedCRC = self.data[2 + dataLength]
+        data = indata[2:2 + dataLength]
+        receivedCRC = indata[2 + dataLength]
         
         # print("No encryption error")
 
@@ -129,7 +145,7 @@ class PsocProtocol(asyncio.Protocol):
         #     decrypted_packet.extend(decrypted_block[:len(block)])
 
         # Calculate CRC8
-        calculatedCRC = calculateCRC8(opCode, dataLength, data)
+        calculatedCRC = calculateCRC8(0x0A, dataLength, data)
         # Check if the received CRC matches the calculated one
         if receivedCRC != calculatedCRC:
             print("CRC check failed.")
@@ -137,22 +153,20 @@ class PsocProtocol(asyncio.Protocol):
         
         timestamp = datetime.now(timezone.utc)
         try:
-            # 1) First 6 floats (24 bytes total)
-            adc0, adc1, adc2, adc3, fake_adc0, fake_adc1 = struct.unpack('<6f', data[:24])
+            # adc0, adc1, adc2, adc3, p0, p1, flow_ml_min, phase_deg, nrsaA, nrsaB, dA, dB = struct.unpack('<12f', data[:48])
+            return [timestamp, opCode] + list(struct.unpack('<12f', data))
 
-            # 2) Next 8 int16 (16 bytes)
-            uart_u16 = [bytes2u16Int(data[24+i:24+i+2]) for i in range(0, 16, 2)]
-            uart_i16 = [u16_to_i16(v) for v in uart_u16]
-
-            self.lines.append([timestamp, opCode] + list(struct.unpack('<6f', data[:24])) + uart_i16)
-
-            if opCode == 0xF2:
-                print("WARNING: ADC out of range.")
-            elif opCode == 0xF3:
-                print("WARNING: ADC jumping.")
-        
         except struct.error as e:
             print(f"Unpack error: {e}.")
+
+        return
+
+class PsocProtocol(asyncio.Protocol):
+    def connection_made(self, transport):
+        self.transport = transport
+        print("Port opened", transport)
+        self.data = bytearray()
+        self.lines = []
 
     def data_received(self, data):
         """
@@ -162,11 +176,13 @@ class PsocProtocol(asyncio.Protocol):
             None
         """
         self.data.extend(data)
-        buffer_len = len(self.data)
-        if buffer_len < 1 or buffer_len < self.data[1] + 3:
-            return
-        self.process_data()
-        self.data = bytearray()
+        loc = self.data.find(b'\r\n')
+        while loc >= 0:
+            line = process_data(self.data[:loc])
+            if line:
+                self.lines.append(line)
+            del self.data[:loc + 2]
+            loc = self.data.find(b'\r\n')
     
     def pause_reading(self):
         self.transport.pause_reading()

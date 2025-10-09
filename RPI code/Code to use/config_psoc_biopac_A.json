@@ -2,7 +2,7 @@
     "protocol": "psoc",
     "db_name":"2025_10_09_sheep_psoc_a",
     "prefix":"psoc_A",
-    "log_directory":"/home/pi5data/Desktop/ecmo/log",
+    "log_directory":"/home/pi5sheep1/Desktop/ecmo/log",
     "sensor_port":"/dev/ttyAMA0",
     "sensor_baudrate":115200,
     "columns": [
@@ -18,8 +18,6 @@
         "flow_2",
         "flow_3",
         "flow_4",
-        "flow_5",
-        "flow_6",
-        "flow_7"
+        "flow_5"
     ]
 }

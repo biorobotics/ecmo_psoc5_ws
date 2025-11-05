@@ -198,6 +198,7 @@ int main(void)
         opcode |= flowInitError;
         u16Int2Bytes(0xCCCCu, payload);
         flow_scale_valid = false;
+        UART_Debug_PutString("Flow Sensor Initialization Error\r\n");
     }
     else {
         flow_scale_factor = be16_u(b0, b1);
@@ -284,8 +285,14 @@ int main(void)
 
             if (flow_scale_valid) {
                 gotF = OEM_ReadF(&flow_ml_min, &good);
+                if(!gotF)
+                    UART_Debug_PutString("Flow Reading Erro, timeout r\r\n");
                 gotP = OEM_ReadP(&phase_deg);
+                if(!gotP)
+                    UART_Debug_PutString("NRSA Error, timeout\r\n");
                 gotA = OEM_ReadAmp(&nrsaA, &nrsaB, &dA, &dB);
+                if(!gotA)
+                    UART_Debug_PutString("Amplitude Error, timeout\r\n");
             }
 
             /* If anything wrong with OEM reads or signal, mark warning opcode */

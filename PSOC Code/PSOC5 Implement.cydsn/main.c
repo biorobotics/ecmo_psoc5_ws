@@ -176,29 +176,32 @@ int main(void)
     // Get status from the flow sensor
     while (UART_OEM_GetRxBufferSize() > 0) { (void)UART_OEM_GetChar(); }
     UART_OEM_PutChar('S');
+    
     uint8_t b0=0, b1=0;
     bool got2 = OEM_Read2(&b0, &b1, 50u);
     if (!got2) {
         opcode |= flowInitError;
         u16Int2Bytes(0u, payload);
+        UART_Debug_PutString("Flow Sensor Initialization Error\r\n");
     }
     else {
         uint16_t status = be16_u(b0, b1);
         if (((status & 0x8000u) == 0u) || ((status & 0x0001u) == 0u)) {
             opcode |= flowInitError;
             u16Int2Bytes(status, payload);
+            UART_Debug_PutString("Initialization Status Check Failure\r\n");
         }
     }
 
     // Check other things like toggling in the future
 
+    while (UART_OEM_GetRxBufferSize() > 0) { (void)UART_OEM_GetChar(); }
     UART_OEM_PutChar('C');
     got2 = OEM_Read2(&b0, &b1, 50u);
     if (!got2) {
         opcode |= flowInitError;
         u16Int2Bytes(0xCCCCu, payload);
         flow_scale_valid = false;
-        UART_Debug_PutString("Flow Sensor Initialization Error\r\n");
     }
     else {
         flow_scale_factor = be16_u(b0, b1);
@@ -280,19 +283,20 @@ int main(void)
             float32 flow_ml_min = NAN, phase_deg = NAN;
             uint8 good = 0;
             float32  nrsaA = NAN, nrsaB = NAN, dA = NAN, dB = NAN;
+            char buf[64] = {0};
 
             bool gotF = false, gotP = false, gotA = false;
 
             if (flow_scale_valid) {
                 gotF = OEM_ReadF(&flow_ml_min, &good);
                 if(!gotF)
-                    UART_Debug_PutString("Flow Reading Erro, timeout r\r\n");
+                    UART_Debug_PutString("Flow Reading Error, timeout r\r\n");
                 gotP = OEM_ReadP(&phase_deg);
                 if(!gotP)
-                    UART_Debug_PutString("NRSA Error, timeout\r\n");
+                    UART_Debug_PutString("Phase Reading Error, timeout\r\n");
                 gotA = OEM_ReadAmp(&nrsaA, &nrsaB, &dA, &dB);
                 if(!gotA)
-                    UART_Debug_PutString("Amplitude Error, timeout\r\n");
+                    UART_Debug_PutString("Amplitude Reading Error, timeout\r\n");
             }
 
             /* If anything wrong with OEM reads or signal, mark warning opcode */
@@ -318,22 +322,38 @@ int main(void)
 static bool OEM_Read2(uint8_t *msb, uint8_t *lsb, uint32_t timeout_ms)
 {
     uint32_t waited = 0;
-    while (UART_OEM_GetRxBufferSize() < 2u && waited < timeout_ms) {
-        CyDelay(1u);
+    uint8_t count = 0;
+    uint8_t bytes[2];
+
+    while (waited < timeout_ms && count < 2) {
+        uint8_t rxSize = UART_OEM_GetRxBufferSize();
+        if (rxSize > 0) {
+            while (rxSize-- && count < 2) {
+                bytes[count++] = UART_OEM_GetChar();
+            }
+            if (count >= 2)
+                break;
+        }
+        CyDelay(1);
         waited++;
     }
-    if (UART_OEM_GetRxBufferSize() < 2u) return false;
-    *msb = UART_OEM_GetChar();
-    *lsb = UART_OEM_GetChar();
+    
+    *msb = bytes[0];
+    *lsb = bytes[1];
+    
     return true;
 }
 
 static bool OEM_ReadF(float *flow_ml_min, uint8_t *good)
 {
     uint8_t msb=0, lsb=0;
+    while (UART_OEM_GetRxBufferSize() > 0) { (void)UART_OEM_GetChar(); }
     UART_OEM_PutChar('F');
     if (!OEM_Read2(&msb, &lsb, OEM_TIMEOUT_MS)) return false;
-
+    
+    char msg[40] = {0};
+    sprintf(msg, "Flow: %02X %02X\r\n", msb, lsb);
+    UART_Debug_PutString(msg);
     uint16_t v = be16_u(msb, lsb);
     *good   = (uint8_t)(v & 0x0001u);
 
@@ -347,10 +367,14 @@ static bool OEM_ReadF(float *flow_ml_min, uint8_t *good)
 static bool OEM_ReadP(float *phase_deg)
 {
     uint8_t msb = 0, lsb = 0;
+    while (UART_OEM_GetRxBufferSize() > 0) { (void)UART_OEM_GetChar(); }
     UART_OEM_PutChar('P');
     if (!OEM_Read2(&msb, &lsb, OEM_TIMEOUT_MS)) return false;
 
-    uint16_t v = ((uint16_t)msb << 8) | (uint16_t)lsb;
+    char msg[40] = {0};
+    sprintf(msg, "Phase: %02X %02X\r\n", msb, lsb);
+    UART_Debug_PutString(msg);
+    uint16_t v = be16_u(msb, lsb);
 
     /* signed 14-bit: zero bits1..0, then arithmetic >>2 */
     int16_t raw14 = (int16_t)((int16_t)(v & 0xFFFC) >> 2);
@@ -365,12 +389,20 @@ static bool OEM_ReadAmp(float *nrsaA_pct, float *nrsaB_pct, float *dA_pct, float
     uint8_t pmsb=0, plsb=0, cmsb=0, clsb=0;
 
     /* 'B' = previous amplitudes (A,B) */
+    while (UART_OEM_GetRxBufferSize() > 0) { (void)UART_OEM_GetChar(); }
     UART_OEM_PutChar('B');
     if (!OEM_Read2(&pmsb, &plsb, OEM_TIMEOUT_MS)) return false;
+    char msg[40] = {0};
+    sprintf(msg, "Prev Amp: %02X %02X\r\n", pmsb, plsb);
+    UART_Debug_PutString(msg);
 
     /* 'A' = current amplitudes (A,B) */
+    while (UART_OEM_GetRxBufferSize() > 0) { (void)UART_OEM_GetChar(); }
     UART_OEM_PutChar('A');
     if (!OEM_Read2(&cmsb, &clsb, OEM_TIMEOUT_MS)) return false;
+    char msg_2[40] = {0};
+    sprintf(msg_2, "Amp: %02X %02X\r\n", cmsb, clsb);
+    UART_Debug_PutString(msg_2);
 
     /* Each byte is NRSA% * 2; 0xFF means channel absent */
     float prevA = (pmsb == 0xFF) ? NAN : (pmsb * 0.5f);

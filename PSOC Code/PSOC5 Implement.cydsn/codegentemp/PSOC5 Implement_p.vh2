@@ -1,5 +1,5 @@
 -- Project:   PSOC5 Implement
--- Generated: 11/05/2025 12:38:58
+-- Generated: 11/06/2025 18:49:48
 -- PSoC Creator  4.4
 
 ENTITY \PSOC5 Implement\ IS
@@ -2262,7 +2262,7 @@ BEGIN
 
     \UART_OEM:BUART:counter_load_not\:macrocell
         GENERIC MAP(
-            eqn_main => "(!main_0 * !main_1 * main_2) + (!main_0 * !main_1 * !main_3)",
+            eqn_main => "(!main_0 * !main_1 * !main_3) + (main_0 * main_1 * main_2 * main_3)",
             regmode => 0,
             clken_mode => 1)
         PORT MAP(
@@ -2274,7 +2274,7 @@ BEGIN
 
     \UART_OEM:BUART:tx_status_0\:macrocell
         GENERIC MAP(
-            eqn_main => "(!main_0 * !main_1 * main_2 * main_3 * main_4)",
+            eqn_main => "(main_0 * main_1 * main_2 * main_3 * main_4)",
             regmode => 0,
             clken_mode => 1)
         PORT MAP(
@@ -3151,7 +3151,7 @@ BEGIN
 
     \UART_OEM:BUART:tx_state_1\:macrocell
         GENERIC MAP(
-            eqn_main => "(main_0 * main_1 * main_2 * main_3) + (main_0 * !main_3 * main_4 * main_5) + (main_1 * !main_3 * main_5)",
+            eqn_main => "(!main_0 * !main_1 * main_2 * main_3) + (main_0 * main_1 * main_2 * main_3) + (main_0 * !main_3 * main_4 * main_5) + (main_1 * !main_3 * main_5)",
             regmode => 2,
             clk_inv => '0',
             clken_mode => 1)
@@ -3167,7 +3167,7 @@ BEGIN
 
     \UART_OEM:BUART:tx_state_0\:macrocell
         GENERIC MAP(
-            eqn_main => "(!main_0 * !main_1 * main_2 * !main_3) + (!main_0 * !main_1 * !main_3 * !main_4) + (main_0 * main_1 * main_2 * main_3 * main_4) + (main_1 * !main_4 * main_5)",
+            eqn_main => "(!main_0 * !main_1 * main_2 * main_4) + (!main_0 * !main_1 * !main_3 * !main_4) + (main_0 * main_1 * main_2 * main_3 * main_4) + (main_1 * !main_4 * main_5)",
             regmode => 2,
             clk_inv => '0',
             clken_mode => 1)
@@ -3183,7 +3183,7 @@ BEGIN
 
     \UART_OEM:BUART:tx_state_2\:macrocell
         GENERIC MAP(
-            eqn_main => "(!main_0 * !main_1 * main_2 * main_3) + (main_0 * main_1 * main_2 * main_3) + (main_0 * main_1 * !main_3 * main_5) + (main_0 * !main_3 * main_4 * main_5)",
+            eqn_main => "(main_0 * main_1 * main_2 * main_3) + (main_0 * main_1 * !main_3 * main_5) + (main_0 * !main_3 * main_4 * main_5)",
             regmode => 2,
             clk_inv => '0',
             clken_mode => 1)
@@ -3199,7 +3199,7 @@ BEGIN
 
     \UART_OEM:BUART:tx_bitclk\:macrocell
         GENERIC MAP(
-            eqn_main => "(!main_0 * !main_1 * main_3) + (!main_2)",
+            eqn_main => "(main_0 * main_1 * main_3) + (!main_2)",
             regmode => 1,
             clk_inv => '0',
             clken_mode => 1)

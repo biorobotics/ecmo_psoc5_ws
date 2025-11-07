@@ -350,7 +350,7 @@ extern uint8 UART_OEM_initVar;
 
 /* UART shifts max 8 bits, Mark/Space functionality working if 9 selected */
 #define UART_OEM_NUMBER_OF_DATA_BITS    ((8u > 8u) ? 8u : 8u)
-#define UART_OEM_NUMBER_OF_STOP_BITS    (1u)
+#define UART_OEM_NUMBER_OF_STOP_BITS    (2u)
 
 #if (UART_OEM_RXHW_ADDRESS_ENABLED)
     #define UART_OEM_RX_ADDRESS_MODE    (0u)

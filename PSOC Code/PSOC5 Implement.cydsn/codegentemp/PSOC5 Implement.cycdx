@@ -841,17 +841,14 @@
     <block name="IntClock" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="VirtualMux_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="BUART" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-    <register name="RX_UART_OEM_RX_ADDRESS1" address="0x4000642B" bitWidth="8" desc="RX Address1 Register" hidden="false" />
-    <register name="RX_UART_OEM_RX_ADDRESS2" address="0x4000643B" bitWidth="8" desc="RX Address2 Register" hidden="false" />
-    <register name="TX_UART_OEM_TX_DATA" address="0x40006447" bitWidth="8" desc="TX Data Register" hidden="false" />
-    <register name="RX_UART_OEM_RX_DATA" address="0x4000644B" bitWidth="8" desc="RX Data Register" hidden="false" />
-    <register name="TX_UART_OEM_TX_STATUS" address="0x40006467" bitWidth="8" desc="TX status register" hidden="false">
+    <register name="TX_UART_OEM_TX_DATA" address="0x40006448" bitWidth="8" desc="TX Data Register" hidden="false" />
+    <register name="TX_UART_OEM_TX_STATUS" address="0x40006463" bitWidth="8" desc="TX status register" hidden="false">
       <field name="UART_OEM_TX_STS_COMPLETE" from="0" to="0" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_OEM_TX_STS_FIFO_EMPTY" from="1" to="1" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_OEM_TX_STS_FIFO_FULL" from="2" to="2" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_OEM_TX_STS_FIFO_NOT_FULL" from="3" to="3" access="R" resetVal="" desc="" hidden="false" />
     </register>
-    <register name="RX_UART_OEM_RX_STATUS" address="0x40006469" bitWidth="8" desc="RX status register" hidden="false">
+    <register name="RX_UART_OEM_RX_STATUS" address="0x40006468" bitWidth="8" desc="RX status register" hidden="false">
       <field name="UART_OEM_RX_STS_MRKSPC" from="0" to="0" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_OEM_RX_STS_BREAK" from="1" to="1" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_OEM_RX_STS_PAR_ERROR" from="2" to="2" access="R" resetVal="" desc="" hidden="false" />
@@ -860,18 +857,21 @@
       <field name="UART_OEM_RX_STS_FIFO_NOTEMPTY" from="5" to="5" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_OEM_RX_STS_ADDR_MATCH" from="6" to="6" access="R" resetVal="" desc="" hidden="false" />
     </register>
+    <register name="RX_UART_OEM_RX_ADDRESS1" address="0x4000652B" bitWidth="8" desc="RX Address1 Register" hidden="false" />
+    <register name="RX_UART_OEM_RX_ADDRESS2" address="0x4000653B" bitWidth="8" desc="RX Address2 Register" hidden="false" />
+    <register name="RX_UART_OEM_RX_DATA" address="0x4000654B" bitWidth="8" desc="RX Data Register" hidden="false" />
   </block>
   <block name="UART_Debug" BASE="0x0" SIZE="0x0" desc="UART" visible="true" hidden="false">
     <block name="BUART" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="VirtualMux_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="IntClock" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-    <register name="TX_UART_Debug_TX_DATA" address="0x4000644C" bitWidth="8" desc="TX Data Register" hidden="false" />
-    <register name="TX_UART_Debug_TX_STATUS" address="0x40006462" bitWidth="8" desc="TX status register" hidden="false">
+    <register name="TX_UART_Debug_TX_STATUS" address="0x40006464" bitWidth="8" desc="TX status register" hidden="false">
       <field name="UART_Debug_TX_STS_COMPLETE" from="0" to="0" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_Debug_TX_STS_FIFO_EMPTY" from="1" to="1" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_Debug_TX_STS_FIFO_FULL" from="2" to="2" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_Debug_TX_STS_FIFO_NOT_FULL" from="3" to="3" access="R" resetVal="" desc="" hidden="false" />
     </register>
+    <register name="TX_UART_Debug_TX_DATA" address="0x40006547" bitWidth="8" desc="TX Data Register" hidden="false" />
   </block>
   <block name="Timer_ISR" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false">
     <block name="VirtualMux_2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
@@ -989,6 +989,12 @@
     <register name="RX_UART_RPI_RX_ADDRESS1" address="0x4000642E" bitWidth="8" desc="RX Address1 Register" hidden="false" />
     <register name="RX_UART_RPI_RX_ADDRESS2" address="0x4000643E" bitWidth="8" desc="RX Address2 Register" hidden="false" />
     <register name="RX_UART_RPI_RX_DATA" address="0x4000644E" bitWidth="8" desc="RX Data Register" hidden="false" />
+    <register name="TX_UART_RPI_TX_STATUS" address="0x40006466" bitWidth="8" desc="TX status register" hidden="false">
+      <field name="UART_RPI_TX_STS_COMPLETE" from="0" to="0" access="R" resetVal="" desc="" hidden="false" />
+      <field name="UART_RPI_TX_STS_FIFO_EMPTY" from="1" to="1" access="R" resetVal="" desc="" hidden="false" />
+      <field name="UART_RPI_TX_STS_FIFO_FULL" from="2" to="2" access="R" resetVal="" desc="" hidden="false" />
+      <field name="UART_RPI_TX_STS_FIFO_NOT_FULL" from="3" to="3" access="R" resetVal="" desc="" hidden="false" />
+    </register>
     <register name="RX_UART_RPI_RX_STATUS" address="0x4000646D" bitWidth="8" desc="RX status register" hidden="false">
       <field name="UART_RPI_RX_STS_MRKSPC" from="0" to="0" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_RPI_RX_STS_BREAK" from="1" to="1" access="R" resetVal="" desc="" hidden="false" />
@@ -998,13 +1004,7 @@
       <field name="UART_RPI_RX_STS_FIFO_NOTEMPTY" from="5" to="5" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_RPI_RX_STS_ADDR_MATCH" from="6" to="6" access="R" resetVal="" desc="" hidden="false" />
     </register>
-    <register name="TX_UART_RPI_TX_DATA" address="0x4000654A" bitWidth="8" desc="TX Data Register" hidden="false" />
-    <register name="TX_UART_RPI_TX_STATUS" address="0x40006569" bitWidth="8" desc="TX status register" hidden="false">
-      <field name="UART_RPI_TX_STS_COMPLETE" from="0" to="0" access="R" resetVal="" desc="" hidden="false" />
-      <field name="UART_RPI_TX_STS_FIFO_EMPTY" from="1" to="1" access="R" resetVal="" desc="" hidden="false" />
-      <field name="UART_RPI_TX_STS_FIFO_FULL" from="2" to="2" access="R" resetVal="" desc="" hidden="false" />
-      <field name="UART_RPI_TX_STS_FIFO_NOT_FULL" from="3" to="3" access="R" resetVal="" desc="" hidden="false" />
-    </register>
+    <register name="TX_UART_RPI_TX_DATA" address="0x40006545" bitWidth="8" desc="TX Data Register" hidden="false" />
   </block>
   <block name="TX_Debug" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
 </blockRegMap>

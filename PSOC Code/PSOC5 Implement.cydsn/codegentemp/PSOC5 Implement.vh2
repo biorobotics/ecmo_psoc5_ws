@@ -2,7 +2,7 @@
 --	Conversion of PSOC5 Implement.v to vh2:
 --
 --	Cypress Semiconductor - WARP Version 6.3 IR 41
---	Wed Nov 05 12:38:52 2025
+--	Thu Nov 06 18:49:14 2025
 --
 
 USE cypress.cypress.all;
@@ -1396,38 +1396,38 @@ tmpOE__TX_OEM_net_0 <=  ('1') ;
 
 Net_171 <= (not \UART_OEM:BUART:txn\);
 
-\UART_OEM:BUART:counter_load_not\ <= ((not \UART_OEM:BUART:tx_bitclk_enable_pre\ and \UART_OEM:BUART:tx_state_2\)
-	OR \UART_OEM:BUART:tx_state_0\
-	OR \UART_OEM:BUART:tx_state_1\);
+\UART_OEM:BUART:counter_load_not\ <= ((not \UART_OEM:BUART:tx_state_1\ and \UART_OEM:BUART:tx_state_2\)
+	OR (not \UART_OEM:BUART:tx_state_2\ and \UART_OEM:BUART:tx_state_0\)
+	OR (not \UART_OEM:BUART:tx_state_0\ and \UART_OEM:BUART:tx_state_1\)
+	OR (not \UART_OEM:BUART:tx_bitclk_enable_pre\ and \UART_OEM:BUART:tx_state_2\));
 
-\UART_OEM:BUART:tx_status_0\ <= ((not \UART_OEM:BUART:tx_state_1\ and not \UART_OEM:BUART:tx_state_0\ and \UART_OEM:BUART:tx_bitclk_enable_pre\ and \UART_OEM:BUART:tx_fifo_empty\ and \UART_OEM:BUART:tx_state_2\));
+\UART_OEM:BUART:tx_status_0\ <= ((\UART_OEM:BUART:tx_state_1\ and \UART_OEM:BUART:tx_state_0\ and \UART_OEM:BUART:tx_bitclk_enable_pre\ and \UART_OEM:BUART:tx_fifo_empty\ and \UART_OEM:BUART:tx_state_2\));
 
 \UART_OEM:BUART:tx_status_2\ <= (not \UART_OEM:BUART:tx_fifo_notfull\);
 
 \UART_OEM:BUART:tx_bitclk\\D\ <= ((not \UART_OEM:BUART:tx_state_2\ and \UART_OEM:BUART:tx_bitclk_enable_pre\)
-	OR (\UART_OEM:BUART:tx_state_0\ and \UART_OEM:BUART:tx_bitclk_enable_pre\)
-	OR (\UART_OEM:BUART:tx_state_1\ and \UART_OEM:BUART:tx_bitclk_enable_pre\));
+	OR (not \UART_OEM:BUART:tx_state_0\ and \UART_OEM:BUART:tx_bitclk_enable_pre\)
+	OR (not \UART_OEM:BUART:tx_state_1\ and \UART_OEM:BUART:tx_bitclk_enable_pre\));
 
 \UART_OEM:BUART:tx_mark\\D\ <= ((not \UART_OEM:BUART:reset_reg\ and \UART_OEM:BUART:tx_mark\));
 
 \UART_OEM:BUART:tx_state_2\\D\ <= ((not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_state_2\ and \UART_OEM:BUART:tx_state_1\ and \UART_OEM:BUART:tx_counter_dp\ and \UART_OEM:BUART:tx_bitclk\)
 	OR (not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_state_2\ and \UART_OEM:BUART:tx_state_1\ and \UART_OEM:BUART:tx_state_0\ and \UART_OEM:BUART:tx_bitclk\)
-	OR (not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_state_1\ and \UART_OEM:BUART:tx_state_0\ and \UART_OEM:BUART:tx_state_2\)
-	OR (not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_state_0\ and \UART_OEM:BUART:tx_state_1\ and \UART_OEM:BUART:tx_state_2\)
-	OR (not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_bitclk_enable_pre\ and \UART_OEM:BUART:tx_state_2\));
+	OR (not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_bitclk_enable_pre\ and \UART_OEM:BUART:tx_state_2\)
+	OR (not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_state_0\ and \UART_OEM:BUART:tx_state_2\)
+	OR (not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_state_1\ and \UART_OEM:BUART:tx_state_2\));
 
 \UART_OEM:BUART:tx_state_1\\D\ <= ((not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_state_1\ and not \UART_OEM:BUART:tx_state_2\ and \UART_OEM:BUART:tx_state_0\ and \UART_OEM:BUART:tx_bitclk\)
 	OR (not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_state_2\ and not \UART_OEM:BUART:tx_bitclk\ and \UART_OEM:BUART:tx_state_1\)
+	OR (not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_state_0\ and \UART_OEM:BUART:tx_bitclk_enable_pre\ and \UART_OEM:BUART:tx_state_2\)
 	OR (not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_bitclk_enable_pre\ and \UART_OEM:BUART:tx_state_1\ and \UART_OEM:BUART:tx_state_2\)
-	OR (not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_state_0\ and not \UART_OEM:BUART:tx_counter_dp\ and \UART_OEM:BUART:tx_state_1\)
-	OR (not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_state_0\ and \UART_OEM:BUART:tx_state_1\ and \UART_OEM:BUART:tx_state_2\));
+	OR (not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_state_0\ and not \UART_OEM:BUART:tx_counter_dp\ and \UART_OEM:BUART:tx_state_1\));
 
-\UART_OEM:BUART:tx_state_0\\D\ <= ((not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_state_1\ and not \UART_OEM:BUART:tx_fifo_empty\ and \UART_OEM:BUART:tx_bitclk_enable_pre\ and \UART_OEM:BUART:tx_state_2\)
-	OR (not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_state_1\ and not \UART_OEM:BUART:tx_state_0\ and not \UART_OEM:BUART:tx_fifo_empty\ and not \UART_OEM:BUART:tx_state_2\)
+\UART_OEM:BUART:tx_state_0\\D\ <= ((not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_state_1\ and not \UART_OEM:BUART:tx_state_0\ and not \UART_OEM:BUART:tx_fifo_empty\ and not \UART_OEM:BUART:tx_state_2\)
+	OR (not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_state_1\ and \UART_OEM:BUART:tx_bitclk_enable_pre\ and \UART_OEM:BUART:tx_state_2\)
 	OR (not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_bitclk_enable_pre\ and \UART_OEM:BUART:tx_state_0\ and \UART_OEM:BUART:tx_state_2\)
 	OR (not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_state_2\ and not \UART_OEM:BUART:tx_bitclk\ and \UART_OEM:BUART:tx_state_0\)
-	OR (not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_fifo_empty\ and \UART_OEM:BUART:tx_state_0\ and \UART_OEM:BUART:tx_state_2\)
-	OR (not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_state_1\ and \UART_OEM:BUART:tx_state_0\ and \UART_OEM:BUART:tx_state_2\));
+	OR (not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_fifo_empty\ and \UART_OEM:BUART:tx_state_0\ and \UART_OEM:BUART:tx_state_2\));
 
 \UART_OEM:BUART:txn\\D\ <= ((not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_state_0\ and not \UART_OEM:BUART:tx_shift_out\ and not \UART_OEM:BUART:tx_state_2\ and not \UART_OEM:BUART:tx_counter_dp\ and \UART_OEM:BUART:tx_state_1\ and \UART_OEM:BUART:tx_bitclk\)
 	OR (not \UART_OEM:BUART:reset_reg\ and not \UART_OEM:BUART:tx_state_1\ and not \UART_OEM:BUART:tx_state_2\ and not \UART_OEM:BUART:tx_bitclk\ and \UART_OEM:BUART:tx_state_0\)

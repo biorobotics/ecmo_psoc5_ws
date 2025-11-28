@@ -1,0 +1,56 @@
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(generator_version "9.0")
+	(uuid "7c897e9e-092e-4e5e-b020-789f31594d48")
+	(paper "A3")
+	(lib_symbols)
+	(sheet
+		(at 185.42 68.58)
+		(size 33.02 36.83)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "d8a1124d-f485-4aae-8c25-09855138e00b")
+		(property "Sheetname" "Main Microcontroller"
+			(at 185.42 67.8684 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Main Microcontroller.kicad_sch"
+			(at 185.42 105.9946 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "PSOC_5_PCB"
+				(path "/7c897e9e-092e-4e5e-b020-789f31594d48"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)

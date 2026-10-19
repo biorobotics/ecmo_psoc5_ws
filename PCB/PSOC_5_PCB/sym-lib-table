@@ -1,0 +1,4 @@
+(sym_lib_table
+	(version 7)
+	(lib (name "ECMO") (type "KiCad") (uri "C:/Users/29928/Desktop/ECMO/ecmo_psoc5_ws/PCB/Library/Symbol/") (options "") (descr ""))
+)

@@ -12156,7 +12156,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "2.2KΩ"
+		(property "Value" "10KΩ"
 			(at 53.594 215.392 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13238,7 +13238,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10KΩ"
+		(property "Value" "2.2KΩ"
 			(at 48.26 220.472 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15278,7 +15278,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "2.2KΩ"
+		(property "Value" "10KΩ"
 			(at 53.594 217.932 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16794,7 +16794,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10KΩ"
+		(property "Value" "2.2KΩ"
 			(at 48.26 223.266 90)
 			(show_name no)
 			(do_not_autoplace no)

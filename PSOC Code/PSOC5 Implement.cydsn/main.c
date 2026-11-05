@@ -338,6 +338,10 @@ static bool OEM_Read2(uint8_t *msb, uint8_t *lsb, uint32_t timeout_ms)
         waited++;
     }
     
+    if (count != 2u) {
+        return false;
+    }
+
     *msb = bytes[0];
     *lsb = bytes[1];
     

@@ -29,15 +29,15 @@ void switch_multiplexer(uint16_t channel){
     ADC_DelSig_StartConvert();
 }
 
-uint16_t read_pressure(uint16_t MuxSelect){
-    uint16_t pressure_reading;
+int32_t read_pressure(uint16_t MuxSelect){
+    int32_t pressure_reading;
     if(MuxSelect==AMux_CHANNEL_0){
-        pressure_reading = ADC_DelSig_Read16();
+        pressure_reading = ADC_DelSig_Read32();
         // switch Mux to channel 1
         switch_multiplexer(AMux_CHANNEL_1);
     }
     else{
-        pressure_reading = ADC_DelSig_Read16();
+        pressure_reading = ADC_DelSig_Read32();
         // switch Mux to channel 0
         switch_multiplexer(AMux_CHANNEL_0);
     }

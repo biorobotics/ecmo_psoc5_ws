@@ -42,7 +42,7 @@ static const float32 changeToleranceInterval = 0.3;
 
 volatile static float32 savedADC = NAN;
 volatile int16_t adcData[ADC_SAMPLES_PER_PACKET*ADC_NUM_CHANNELS];
-volatile int16_t pressureData[ADC_PRESSURE_CHANNELS];
+volatile int32_t pressureData[ADC_PRESSURE_CHANNELS];
 
 /* Foreground variables */
 static volatile uint16_t adcTimerCount = 0;
@@ -272,7 +272,7 @@ int main(void)
             for (uint8_t i = 0; i < ADC_PRESSURE_CHANNELS; i++) {
                 float32 pressureVolts = /*(3.3/3.3) */ ADC_DelSig_CountsTo_Volts(pressureData[i]);
 
-                if (pressureVolts > (5 + boundaryToleranceInterval) || pressureVolts < (0 - boundaryToleranceInterval)){
+                if (pressureVolts > 0.064f || pressureVolts < -0.064f) {
                     opcode |= PressureOORWarn;
                 }
 

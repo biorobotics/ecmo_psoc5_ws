@@ -17,6 +17,6 @@
 // initialize ADC and Multiplexer
 void init_pressure_sensors();
 
-uint16_t read_pressure(uint16_t MuxSelect);
+int32_t read_pressure(uint16_t MuxSelect);
 
 /* [] END OF FILE */

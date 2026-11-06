@@ -16,6 +16,7 @@ void init_pressure_sensors(){
     ADC_DelSig_Start();
     ADC_DelSig_StartConvert();
     AMux_Start();
+    AMux_FastSelect(AMux_CHANNEL_0);
 }
 
 void switch_multiplexer(uint16_t channel){

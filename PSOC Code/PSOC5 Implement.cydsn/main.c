@@ -37,7 +37,6 @@ volatile static bool pressureDataReady = false;
 volatile static bool flowDataReady = false;
 volatile static bool checkData = false;
 
-static const float32 boundaryToleranceInterval = 0.1;
 static const float32 changeToleranceInterval = 0.3;
 
 volatile static float32 savedADC = NAN;
@@ -260,7 +259,7 @@ int main(void)
                     savedADC = ADCVolts;
                 }
                 /*If ADC value is out of boundary, there might be calibration or hardware setup issue, send another warning OPCODE*/
-                if(ADCVolts > (5 + boundaryToleranceInterval) || ADCVolts < (0 - boundaryToleranceInterval)){
+                if (ADCVolts >= 4.9987f || ADCVolts < -0.1f) {
                     opcode |= ADCOORWarn;
                 }
                 /*Pack ADC value to the data packet that would be later sent to RPI through UART*/

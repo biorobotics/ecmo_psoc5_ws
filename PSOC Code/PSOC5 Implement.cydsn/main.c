@@ -37,12 +37,11 @@ volatile static bool pressureDataReady = false;
 volatile static bool flowDataReady = false;
 volatile static bool checkData = false;
 
-static const float32 boundaryToleranceInterval = 0.1;
 static const float32 changeToleranceInterval = 0.3;
 
 volatile static float32 savedADC = NAN;
 volatile int16_t adcData[ADC_SAMPLES_PER_PACKET*ADC_NUM_CHANNELS];
-volatile int16_t pressureData[ADC_PRESSURE_CHANNELS];
+volatile int32_t pressureData[ADC_PRESSURE_CHANNELS];
 
 /* Foreground variables */
 static volatile uint16_t adcTimerCount = 0;
@@ -260,7 +259,7 @@ int main(void)
                     savedADC = ADCVolts;
                 }
                 /*If ADC value is out of boundary, there might be calibration or hardware setup issue, send another warning OPCODE*/
-                if(ADCVolts > (5 + boundaryToleranceInterval) || ADCVolts < (0 - boundaryToleranceInterval)){
+                if (ADCVolts >= 4.9987f || ADCVolts < -0.1f) {
                     opcode |= ADCOORWarn;
                 }
                 /*Pack ADC value to the data packet that would be later sent to RPI through UART*/
@@ -272,7 +271,7 @@ int main(void)
             for (uint8_t i = 0; i < ADC_PRESSURE_CHANNELS; i++) {
                 float32 pressureVolts = /*(3.3/3.3) */ ADC_DelSig_CountsTo_Volts(pressureData[i]);
 
-                if (pressureVolts > (5 + boundaryToleranceInterval) || pressureVolts < (0 - boundaryToleranceInterval)){
+                if (pressureVolts > 0.064f || pressureVolts < -0.064f) {
                     opcode |= PressureOORWarn;
                 }
 
@@ -338,6 +337,10 @@ static bool OEM_Read2(uint8_t *msb, uint8_t *lsb, uint32_t timeout_ms)
         waited++;
     }
     
+    if (count != 2u) {
+        return false;
+    }
+
     *msb = bytes[0];
     *lsb = bytes[1];
     
